@@ -1,0 +1,29 @@
+{
+  "name": "dr.cheguei",
+  "version": "1.0.0",
+  "description": "Dr. Cheguei! API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matheusot/dr.cheguei.git"
+  },
+  "keywords": [
+    "dr",
+    "cheguei",
+    "api",
+    "unicamp"
+  ],
+  "author": "Matheus Rodrigues, Felipe Dias, Leticia Luz, Lucas Bueno",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matheusot/dr.cheguei/issues"
+  },
+  "homepage": "https://github.com/matheusot/dr.cheguei#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
