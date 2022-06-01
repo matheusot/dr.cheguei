@@ -1,18 +1,32 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
-const db = require('./database');
+const authRouter = require('./src/routes/auth.route');
+
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 
 app.get('/', (req, res) => {
-    let resp = 'Dr. Cheguei: '
-    db.query('SELECT "MariaDB conectado" AS resp', function(err, rows, fields) {
-        if (err) throw err;
-        resp += rows[0].resp;
-        res.send(resp)
-    })
+  res.json({'message': 'ok'});
+})
+
+app.use('/auth', authRouter);
+
+/* Error handler middleware */
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  console.error(err.message, err.stack);
+  res.status(statusCode).json({'message': err.message});
+  return;
 });
 
+/* Starts Express Server */
 app.listen(process.env.PORT || port, 
-    () => console.log(`App listening at http://localhost:${port}`)
+  () => console.log(`App listening at http://localhost:${port}`)
 );
