@@ -6,8 +6,8 @@
 async function getAppointmentsByHC(hc){    
   const db = await require('../configs/db.config').getConnection();
   let [rows, fields] = await db.execute(
-    'SELECT COUNT(1) as appointment_count FROM appointments WHERE hc = ?', 
-    [12345]
+    'SELECT * FROM appointments WHERE hc = ?', 
+    [hc]
   );
   return rows[0].appointment_count;
 }
