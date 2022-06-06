@@ -5,7 +5,7 @@ export const Header = (): React.ReactElement => {
     return (
         <Box>
             <DrChegueiTitle variant="h3"/>
-            <DrChegueiSubtitle variant="h6"/>
+            <DrChegueiSubtitle variant="h6" align="left"/>
         </Box>
     )
 }
