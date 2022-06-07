@@ -11,6 +11,8 @@ const defaultBorderRadius = 5;
 export const PrimaryButton = styled(MuiButton)<ButtonProps>(({ theme }) => ({
     borderRadius: defaultBorderRadius,
     backgroundColor: primaryColor,
+    fontSize: "1.1rem",
+    fontWeight: "700",
     width: "100%",
     '&:hover': {
         backgroundColor: "#ab1818",
@@ -21,6 +23,8 @@ export const SecondaryButton = styled(MuiButton)<ButtonProps>(({ theme }) => ({
     borderRadius: defaultBorderRadius,
     color: primaryColor,
     backgroundColor: fieldColor,
+    fontSize: "1.1rem",
+    fontWeight: "900",
     width: "100%",
     '&:hover': {
         backgroundColor: "#E1E1E1",
@@ -43,13 +47,13 @@ export const InlineFlexWrapper = styled(Box)`
     flex-grow: 1;
     align-items: center;
     justify-content: space-between;
-    max-height: 90px;
+    max-height: 5rem;
 `;
     
 export const TextFieldSegment = styled(OutlinedInput)`
     border-radius: ${defaultBorderRadius}px;
-    width: 80px;
-    height: 80px;
+    width: 5rem;
+    height: 5rem;
     font-size: 2.5rem;
     background-color: ${fieldColor};
     color: ${textColor};
@@ -57,6 +61,7 @@ export const TextFieldSegment = styled(OutlinedInput)`
         padding: 0;
         text-align: center;
         text-transform: uppercase;
+        cursor: pointer;
     }
     input:disabled {
         text-fill-color: ${textColor};
@@ -66,7 +71,7 @@ export const TextFieldSegment = styled(OutlinedInput)`
 export const DrChegueiTitle = styled(Typography)`
     & {
         font-weight: 900;
-        margin-bottom: 10px;
+        margin-bottom: 1rem;
     }
     &::before {
         content: 'Dr.';
@@ -79,19 +84,76 @@ export const DrChegueiTitle = styled(Typography)`
 `;
 
 export const DrChegueiSubtitle = styled(Typography)`
-    &::before {
-        font-size: 24px;
-        font-weight: 400;
-        line-height: 20px;
-        content: 'Evite filas avisando o seu médico que você está pronto para ser atendido em sua consulta agendada.';
-        color: ${textColor};
-    }
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+    color: ${textColor};
 `;
 
 export const DrChegueiText = styled(Typography)`
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 400;
-    line-height: 20px;
-    text-align: left;
+    line-height: 1rem;
     color: ${textColor};
+`;
+
+export const DrChegueiToastTitle = styled(Typography)`
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    font-weight: 900;    
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+    color: ${primaryColor};
+`;
+
+export const DrChegueiToastSubtitle = styled(Typography)`
+    font-size: 0.8rem;
+    font-weight: 900;
+    font-height: 1rem;
+    color: #000;
+`;
+
+export const DrChegueiToastText = styled(Typography)`
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.2rem;
+    color: ${textColor};
+`;
+
+export const DrChegueiToastStatus = styled(Typography)`
+    font-size: 1.3rem;
+    font-size: 1.3rem;
+    font-weight: 900;    
+    color: ${primaryColor};
+`;
+
+export const DrChegueiToastDescription = styled(Typography)`
+    font-size: 1.0rem;
+    line-height: 1.1rem; 
+    color: ${textColor};
+`;
+
+export const CardClose = styled(MuiButton)`
+    & {
+        display: block;
+        line-height: 0;
+        min-width: 0;
+        position: fixed;
+        right: 1.5rem;
+    }
+    &:hover {
+        background-color: transparent;
+    }
+    &::before {
+        display: block;
+        margin: 0;
+        padding: 1rem 0.5rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        content: '×';
+        color: ${textColor};
+    }
+    .MuiTouchRipple-root {
+        display: none;
+    }
 `;
