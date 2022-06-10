@@ -1,0 +1,25 @@
+_id: req_be1a9260a20c42eaa102a5efa4708c98
+type: Request
+parentId: fld_91714acfdaa64e18b71a2592d4022ba2
+modified: 1654847932909
+created: 1654071300095
+url: "{{ _.url }}/user"
+name: Auth User Info
+description: ""
+method: GET
+body: {}
+parameters: []
+headers:
+  - id: pair_df8883128e8c4e0d8c08f40f45d7c121
+    name: Authorization
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsInR5cGUiOjIsImRvYyI6IjIyMjMxOCIsIm5hbWUiOiJNYXRoZXVzIFJvZHJpZ3VlcyIsInVzZXJuYW1lIjoibWF0aGV1cyIsImVtYWlsIjoibTIyMjMxOEBkYWMudW5pY2FtcC5iciIsInBob25lIjoiMTkgOTg0MDUtNzQ0NyIsImxhc3RfbG9naW4iOiIyMDIyLTA2LTEwVDA3OjMxOjQ3LjAwMFoiLCJjcmVhdGlvbl9kYXRlIjoiMjAyMi0wNi0wMVQwNzoxMTo0OS4wMDBaIiwiaWF0IjoxNjU0ODQ3MzIwfQ.ffFhwpWzu9-XYjyZoxUWog6g5Eo1oSvSsctAYhQcYi8
+    description: ""
+authentication: {}
+metaSortKey: -1654847911559
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

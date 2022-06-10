@@ -1,0 +1,31 @@
+_id: req_52a18f0fc80c4fa599ff36ecb69cca64
+type: Request
+parentId: fld_91714acfdaa64e18b71a2592d4022ba2
+modified: 1654847929163
+created: 1654846047378
+url: "{{ _.url }}/session"
+name: Logout
+description: ""
+method: DELETE
+body:
+  mimeType: application/x-www-form-urlencoded
+  params: []
+parameters: []
+headers:
+  - name: Authorization
+    value: "\teyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsInR5cGUiOjIsImRvYyI6\
+      IjIyMjMxOCIsIm5hbWUiOiJNYXRoZXVzIFJvZHJpZ3VlcyIsInVzZXJuYW1lIjoibWF0aGV1c\
+      yIsImVtYWlsIjoibTIyMjMxOEBkYWMudW5pY2FtcC5iciIsInBob25lIjoiMTkgOTg0MDUtNz\
+      Q0NyIsImxhc3RfbG9naW4iOiIyMDIyLTA2LTEwVDEwOjEwOjQ2LjAwMFoiLCJjcmVhdGlvbl9\
+      kYXRlIjoiMjAyMi0wNi0wMVQxMDoxMTo0OS4wMDBaIiwiaWF0IjoxNjU0ODQ2MzA3fQ.QQCBz\
+      doZcKgNgh7P3jgg_zO4dToEVxfQG4b3oZXpF_Mdsdsa"
+    id: pair_11e5b889a253401a9283ac1f625d3a8d
+authentication: {}
+metaSortKey: -1654847911471.5
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

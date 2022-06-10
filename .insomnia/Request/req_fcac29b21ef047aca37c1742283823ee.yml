@@ -1,0 +1,34 @@
+_id: req_fcac29b21ef047aca37c1742283823ee
+type: Request
+parentId: fld_91714acfdaa64e18b71a2592d4022ba2
+modified: 1654847930870
+created: 1654843954725
+url: "{{ _.url }}/session"
+name: Admin Auth
+description: ""
+method: POST
+body:
+  mimeType: application/x-www-form-urlencoded
+  params:
+    - id: pair_e5b83b5fe8d84a8c8daa34095d1d2fbf
+      name: username
+      value: matheus
+      description: ""
+    - id: pair_13cdf9e7a0204ca0a33eae303f884161
+      name: password
+      value: matheus
+      description: ""
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/x-www-form-urlencoded
+    id: pair_11e5b889a253401a9283ac1f625d3a8d
+authentication: {}
+metaSortKey: -1654847911496.5
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

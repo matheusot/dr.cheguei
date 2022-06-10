@@ -1,0 +1,14 @@
+_id: env_12ac02810112470599e0c266fc4bf7cf
+type: Environment
+parentId: env_f558b04fa278466678e6ccc8253d38f3e2fd80c5
+modified: 1654847828825
+created: 1654847816244
+name: Heroku
+data:
+  url: https://dr-cheguei.herokuapp.com
+dataPropertyOrder:
+  "&":
+    - url
+color: null
+isPrivate: false
+metaSortKey: 1654847816244

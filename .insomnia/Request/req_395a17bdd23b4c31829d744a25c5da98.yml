@@ -1,0 +1,30 @@
+_id: req_395a17bdd23b4c31829d744a25c5da98
+type: Request
+parentId: fld_91714acfdaa64e18b71a2592d4022ba2
+modified: 1654847918801
+created: 1654066700928
+url: "{{ _.url }}/session"
+name: HC Auth
+description: ""
+method: POST
+body:
+  mimeType: application/x-www-form-urlencoded
+  params:
+    - id: pair_e5b83b5fe8d84a8c8daa34095d1d2fbf
+      name: hc
+      value: "12345"
+      description: ""
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/x-www-form-urlencoded
+    id: pair_11e5b889a253401a9283ac1f625d3a8d
+authentication: {}
+metaSortKey: -1654847911509
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
