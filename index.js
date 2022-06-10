@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
-const authRouter = require('./src/routes/auth.route');
+const sessionRouter = require('./src/routes/session.route');
+const userRouter = require('./src/routes/user.route');
 
 app.use(bodyParser.json());
 app.use(
@@ -16,7 +17,8 @@ app.get('/', (req, res) => {
   res.json({'message': 'ok'});
 })
 
-app.use('/auth', authRouter);
+app.use('/session', sessionRouter);
+app.use('/user', userRouter);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {

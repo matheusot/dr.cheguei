@@ -12,6 +12,7 @@ async function getAppointmentsByHC(hc){
   return rows[0].appointment_count;
 }
 
+
   
 module.exports = {
   getAppointmentsByHC,

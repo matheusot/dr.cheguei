@@ -24,7 +24,6 @@ function createJWT(userData) {
 const checkJWT = (req, res, next) => {
   const token = req.headers["authorization"];
   const privateKey = require("../configs/jwt.config").privateKey;
-
   jwt.verify(token, privateKey, (err, userInfo) => {
     if (err) {
       res.status(401).json({
