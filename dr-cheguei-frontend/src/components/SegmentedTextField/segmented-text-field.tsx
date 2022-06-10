@@ -20,9 +20,9 @@ export const SegmentedTextField = (
                         (_, index) => {
                             if (props.separatorAt && index === props.separatorAt)
                                 return <Typography key={index} variant="h3" align="center" sx={{ padding: "0 5px" }}>{props.separator}</Typography>
-                            if (index == 0)
+                            if (index === 0)
                                 return <TextFieldSegment key={index} disabled={true} value="H" sx={{ m: "0 2.5px" }} />
-                            if (index == 1)
+                            if (index === 1)
                                 return <TextFieldSegment key={index} disabled={true} value="C" sx={{ m: "0 2.5px" }} />
                             return <TextFieldSegment key={index} sx={{ m: "0 2.5px" }} />
                         }

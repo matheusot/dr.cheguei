@@ -1,9 +1,14 @@
 import { Box, Grid } from '@mui/material';
+import { useState } from 'react';
 import { ImageBox, PrimaryButton, SecondaryButton } from '../../styles';
+import { CallDr } from '../CallDr/call-dr';
 import { Header } from '../DrChegueiHeader/dr-cheguei-header';
 import { SegmentedTextField } from '../SegmentedTextField/segmented-text-field';
 
 export const Home = (): React.ReactElement => {
+     
+    const [checked, setChecked] = useState(false);
+
     return (
         <Box sx={{ height: "100vh" }}>
             <Grid
@@ -32,8 +37,20 @@ export const Home = (): React.ReactElement => {
                         separatorAt={2}
                     />
                     <Box>
-                        <PrimaryButton variant="contained" size="large" sx={{ mb: "10px" }}>Avisar meu médico que cheguei</PrimaryButton>
-                        <SecondaryButton variant="contained" size="large">Preciso de ajuda</SecondaryButton>
+                        <PrimaryButton
+                            variant="contained"
+                            size="large"
+                            sx={{ mb: "10px" }}
+                            onClick={() => {
+                                setChecked(!checked);
+                            }}
+                        >
+                            Avisar meu médico que cheguei
+                        </PrimaryButton>
+                        <SecondaryButton variant="contained" size="large" sx={{ mb: "20px" }}>Preciso de ajuda</SecondaryButton>
+                        <CallDr
+                            checked={checked}
+                        />
                     </Box>
                 </Grid>
             </Grid>
