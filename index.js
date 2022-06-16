@@ -5,6 +5,7 @@ const port = 3000;
 
 const sessionRouter = require('./src/routes/session.route');
 const userRouter = require('./src/routes/user.route');
+const appointmentsRouter = require('./src/routes/appointments.routes');
 
 app.use(bodyParser.json());
 app.use(
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 
 app.use('/session', sessionRouter);
 app.use('/user', userRouter);
+app.use('/appointment', appointmentsRouter);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {

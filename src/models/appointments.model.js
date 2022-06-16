@@ -13,7 +13,23 @@ async function getAppointmentsByHC(hc){
 }
 
 
+async function NewAppointment(sector_id, doctor_id, hc, status, schedule, last_update, creation_date){
+  const db = await require('../configs/db.config').getConnection();
+  const sql = "INSERT INTO appointments (sector_id, doctor_id, hc, status, schedule, last_update, creation_date) \
+  VALUES ("+sector_id+", "+doctor_id+", "+hc+", "+ status+", '"+ schedule+"', '"+ last_update+"', '"+creation_date+"')";
+
+  try{
+    await db.execute(sql);
+    return false;
+  }
+  catch (e) {
+    return e["sqlMessage"];
+  }
   
+}
+
+
 module.exports = {
   getAppointmentsByHC,
+  NewAppointment,
 }
