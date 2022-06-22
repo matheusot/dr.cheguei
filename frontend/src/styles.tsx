@@ -83,6 +83,18 @@ export const DrChegueiTitle = styled(Typography)`
     }
 `;
 
+export const MoreInfoTitle = styled(Typography)`
+    & {
+        font-weight: 900;
+        margin-bottom: 1rem;
+    }
+    &::after {
+        content: 'Como podemos ajudar?';
+        color: ${primaryColor};
+    }
+`;
+
+
 export const DrChegueiSubtitle = styled(Typography)`
     font-size: 1.3rem;
     font-weight: 400;

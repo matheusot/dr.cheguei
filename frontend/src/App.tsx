@@ -1,4 +1,5 @@
 import { Home } from './components/Home/home';
+import { MoreInfo } from './components/MoreInfo/more-info';
 import {
   BrowserRouter as Router,
   Routes,
@@ -13,11 +14,8 @@ function App() {
       <CssBaseline>
         <Router>
           <Routes>
-            <Route
-              path="/"
-              element={<Home />}  
-            >
-            </Route>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/more-info" element={<MoreInfo />}></Route>
           </Routes>
         </Router>
       </CssBaseline>
