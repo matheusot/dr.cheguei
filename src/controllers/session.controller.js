@@ -19,9 +19,9 @@ async function auth(req, res, next) {
  * Authenticate with HC or username/password
 */
 async function logout(req, res, next) {
-  res.set("X-Access-Token", "");
   res.status(200).json({
-    msg: "User logged out"
+    msg: "User logged out",
+    token: ""
   });
 }
 
@@ -46,9 +46,9 @@ async function authHC(res, hc) {
     return
   } 
   const token = await createJWT({hc});
-  res.set("X-Access-Token", token);
   res.status(200).json({
-    msg: "HC authenticated"
+    msg: "HC authenticated",
+    token: token
   });
 }
 
@@ -74,9 +74,9 @@ async function authAdmin(res, username, password) {
     return
   } 
   const token = await createJWT(user);
-  res.set("Authorization-Token", token);
   res.status(200).json({
-    msg: "User authenticated"
+    msg: "User authenticated",
+    token: token
   });
 }
 
