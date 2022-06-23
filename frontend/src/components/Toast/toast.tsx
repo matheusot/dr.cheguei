@@ -10,7 +10,14 @@ export const Toast = ({
 } : any ) => {
     return (
         <Fade in={visible}>
-            <Card sx={{ display: "flex", width: "100%", backgroundColor: "#E9E9E9" }}>
+            <Card sx={{
+                display: "flex",
+                left: 0,
+                bottom: 0,
+                width: "100%",
+                backgroundColor: "#E9E9E9",
+
+            }}>
                 <Box sx={{ display: "flex", width: "60%", flexDirection: "column",
                             margin: "1.5rem 0.7rem", borderRight: "1px solid rgba(0,0,0,.4)" }}>
                     <CardContent sx={{ flex: "1 0 auto" }}>

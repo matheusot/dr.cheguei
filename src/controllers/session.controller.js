@@ -16,7 +16,7 @@ async function auth(req, res, next) {
 
 
 /* 
- * Authenticate with HC or username/password
+ * Logout with HC or username/password
 */
 async function logout(req, res, next) {
   res.status(200).json({

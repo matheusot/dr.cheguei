@@ -3,9 +3,9 @@ import { InlineFlexWrapper, TextFieldSegment, DrChegueiText } from "../../styles
 
 export const SegmentedTextField = (
     props: {
-        segments: number;
+        segments: number
         separator: string | undefined
-        separatorAt: number | undefined;
+        separatorAt: number | undefined
     }): React.ReactElement => {
 
     const textFieldLength = props.separatorAt ? props.segments + 1 : props.segments;
@@ -28,7 +28,7 @@ export const SegmentedTextField = (
                             if (index == 1)
                                 return <TextFieldSegment key={index} disabled={true} value="C"
                                         sx={{ m: "0 0.2rem" }} />
-                            return <TextFieldSegment key={index} sx={{ m: "0 0.2rem" }} />
+                            return <TextFieldSegment key={index} sx={{ m: "0 0.2rem" }} className="hc-text" type="number" />
                         }
                     )
                 }

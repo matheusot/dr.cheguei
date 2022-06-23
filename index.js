@@ -6,7 +6,7 @@ const port = 4000;
 
 const sessionRouter = require('./src/routes/session.route');
 const userRouter = require('./src/routes/user.route');
-const appointmentsRouter = require('./src/routes/appointments.routes');
+const appointmentsRouter = require('./src/routes/appointment.route');
 
 app.use(cors());
 app.use(bodyParser.json());
