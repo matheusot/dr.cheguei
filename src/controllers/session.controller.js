@@ -40,7 +40,7 @@ async function logout(req, res, next) {
 async function authHC(res, hc) {
   const count = await sessionModel.HCAppointmentCount(hc);
   if (count == 0) {
-    res.status(404).json({
+    res.status(401).json({
       msg: "HC not found"
     });
     return
@@ -68,7 +68,7 @@ async function authHC(res, hc) {
 async function authAdmin(res, username, password) {
   const user = await sessionModel.loginWithUsernameAndPassword(username, password);
   if (user == null) {
-    res.status(404).json({
+    res.status(401).json({
       msg: "User or password incorrect"
     });
     return
