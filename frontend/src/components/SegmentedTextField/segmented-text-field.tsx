@@ -28,7 +28,7 @@ export const SegmentedTextField = (
                             if (index == 1)
                                 return <TextFieldSegment key={index} disabled={true} value="C"
                                         sx={{ m: "0 0.2rem" }} />
-                            return <TextFieldSegment key={index} sx={{ m: "0 0.2rem" }} className="hc-text" type="number" />
+                            return <TextFieldSegment key={index} sx={{ m: "0 0.2rem" }} className="hc-text" type="tel" />
                         }
                     )
                 }

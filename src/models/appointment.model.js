@@ -89,6 +89,16 @@ async function getNextAppointmentsByHC(hc){
 }
 
 
+
+async function checkInAppointment(appointmentId) {
+  const db = await require('../configs/db.config').getConnection();
+  let [rows, fields] = await db.execute(`UPDATE appointments SET status=2 WHERE id=?`, 
+    [appointmentId]
+  );
+  console.log([rows, fields])
+}
+
+
 async function NewAppointment(sector_id, doctor_id, hc, status, schedule, last_update, creation_date){
   const db = await require('../configs/db.config').getConnection();
   const sql = "INSERT INTO appointments (sector_id, doctor_id, hc, status, schedule, last_update, creation_date) \
@@ -101,7 +111,6 @@ async function NewAppointment(sector_id, doctor_id, hc, status, schedule, last_u
   catch (e) {
     return e["sqlMessage"];
   }
-  
 }
 
 
@@ -109,4 +118,5 @@ module.exports = {
   getAllAppointments,
   getNextAppointmentsByHC,
   NewAppointment,
+  checkInAppointment
 }

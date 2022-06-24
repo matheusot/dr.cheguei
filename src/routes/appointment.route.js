@@ -6,7 +6,6 @@ const checkJWT = require('../middlewares/jwt.middleware').checkJWT;
 
 /* Appointment Routes */
 router.post('/', checkJWT, appointmentController.addAppointment);
-router.get('/', checkJWT, appointmentController.getAllAppointments);
-router.get('/:hc', checkJWT, appointmentController.getNextAppointmentsByHC);
+router.get('/', checkJWT, appointmentController.getAppointments);
 
 module.exports = router;

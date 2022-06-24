@@ -33,25 +33,22 @@ async function addAppointment(req, res) {
  * Gets all appointments
  * return: appointments found in DB
 */
-async function getAllAppointments(req, res) {
-  const rows = await appointmentModel.getAllAppointments()
-  res.status(200).json(rows)
+async function getAppointments(req, res) {
+  if ("hc" in req.userInfo) {
+    const row = await appointmentModel.getNextAppointmentsByHC(req.userInfo.hc);
+    if (req.query.checkin == 'true' && row) {
+      await appointmentModel.checkInAppointment(row.appointment_id);
+    }
+    return res.status(200).json(row)
+  }
+  if ("doc" in req.userInfo) {
+    /* TODO: get info for all users that have an appointment with the doctor */
+  }
 }
   
-
-/* 
- * Gets next appointments for a given HC
- * return: appointments found in DB
-*/
-async function getNextAppointmentsByHC(req, res) {
-  const hc = req.params.hc
-  const rows = await appointmentModel.getNextAppointmentsByHC(hc)
-  res.status(200).json(rows)
-}
 
   
 module.exports = {
   addAppointment,
-  getAllAppointments,
-  getNextAppointmentsByHC
+  getAppointments
 };
