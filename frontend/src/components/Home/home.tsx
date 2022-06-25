@@ -35,9 +35,7 @@ export const Home = (): React.ReactElement => {
     }
 
     const [alertOpen, setAlertOpen] = React.useState(false);
-    const handleAlertClick = () => {
-        setAlertOpen(true);
-    };
+    
     const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
@@ -72,14 +70,14 @@ export const Home = (): React.ReactElement => {
         
         await axios.post(`${APIURL}/session`, { "hc": hcText })
         .then((res) => {
-            if (res.status == 200) {
+            if (res.status === 200) {
                 reqData = res.data;
             }
             console.log("API Session Done");
         })
         .catch((err) => {
             const res = err.response;
-            if (res.status == 401) {
+            if (res.status === 401) {
                 console.log(res.data.msg)
             }
             console.log("API Session Done");
@@ -97,7 +95,7 @@ export const Home = (): React.ReactElement => {
             }
         })
         .then((res) => {
-            if (res.status == 200) {
+            if (res.status === 200) {
                 setToastDoctorName(res.data.doctor_name);
                 console.log(res.data.appointment_schedule)
                 let date = new Date(res.data.appointment_schedule); 
@@ -109,7 +107,7 @@ export const Home = (): React.ReactElement => {
         })
         .catch((err) => {
             const res = err.response;
-            if (res.status == 401) {
+            if (res.status === 401) {
                 console.log(res.data.msg)
             }
             console.error(err);
