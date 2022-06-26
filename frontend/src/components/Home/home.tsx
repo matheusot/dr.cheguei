@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Box, Stack, Snackbar } from '@mui/material';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import { PrimaryButton, SecondaryButton } from '../../styles';
+import { DrChegueiText, PrimaryButton, SecondaryButton } from '../../styles';
 import { Toast } from '../Toast/toast';
-import { Header } from '../DrChegueiHeader/dr-cheguei-header';
+import { DrChegueiHeader } from '../DrChegueiHeader/dr-cheguei-header';
 import { SegmentedTextField } from '../SegmentedTextField/segmented-text-field';
 import { BasePage } from '../BasePage/base-page';
 
@@ -122,9 +122,12 @@ export const Home = (): React.ReactElement => {
     return (
         <BasePage>
 
-            <Header />
+            <DrChegueiHeader />
 
             <Box sx={{ width:"100%" }}>
+                <DrChegueiText variant="body2" align="left" sx={{ mt: "2rem", mb: "1rem" }}>
+                    Insira seu código HC
+                </DrChegueiText>
                 <SegmentedTextField
                     segments={HCLength + 2} 
                     separator="-"

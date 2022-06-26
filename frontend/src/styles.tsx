@@ -1,4 +1,4 @@
-import { OutlinedInput, Typography } from '@mui/material';
+import { OutlinedInput, Paper, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import MuiButton, { ButtonProps } from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
@@ -7,6 +7,7 @@ const primaryColor = "#BA2121";
 const textColor = "#464646";
 const fieldColor = "#E9E9E9";
 const defaultBorderRadius = 5;
+const RounderBorderRadius = 25;
 
 export const PrimaryButton = styled(MuiButton)<ButtonProps>(({ theme }) => ({
     borderRadius: defaultBorderRadius,
@@ -28,6 +29,18 @@ export const SecondaryButton = styled(MuiButton)<ButtonProps>(({ theme }) => ({
     width: "100%",
     '&:hover': {
         backgroundColor: "#E1E1E1",
+    },
+}));
+
+export const RoundedPrimaryButton = styled(MuiButton)<ButtonProps>(({ theme }) => ({
+    borderRadius: RounderBorderRadius,
+    backgroundColor: primaryColor,
+    fontSize: "1.1rem",
+    fontWeight: "700",
+    width: "100%",
+    maxWidth: "315px",
+    '&:hover': {
+        backgroundColor: "#ab1818",
     },
 }));
 
@@ -73,7 +86,6 @@ export const TextFieldSegment = styled(OutlinedInput)`
 export const DrChegueiTitle = styled(Typography)`
     & {
         font-weight: 900;
-        margin-bottom: 1rem;
     }
     &::before {
         content: 'Dr.';
@@ -170,4 +182,8 @@ export const CardClose = styled(MuiButton)`
     .MuiTouchRipple-root {
         display: none;
     }
+`;
+
+export const DialogPaper = styled(Paper)`
+    border-radius: 20px;
 `;

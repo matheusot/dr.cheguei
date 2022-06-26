@@ -15,9 +15,6 @@ export const SegmentedTextField = (
 
     return (
         <Box sx={{ my: "1rem", width: "100%" }}>
-            <DrChegueiText variant="body2" align="left" sx={{ mb: "1rem" }}>
-                Insira seu código HC
-            </DrChegueiText>
             <InlineFlexWrapper>
                 {
                     Array(textFieldLength).fill(null).map(
