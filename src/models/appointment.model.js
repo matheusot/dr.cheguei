@@ -77,7 +77,7 @@ async function getNextAppointmentsByHC(hc){
       
       DATE(appointments.schedule) >= DATE(NOW()) AND
       appointments.status = 1 AND
-      appointments.hc = 12345
+      appointments.hc = ?
       
     ORDER BY
 
@@ -88,6 +88,58 @@ async function getNextAppointmentsByHC(hc){
   return rows[0];
 }
 
+
+/* 
+ * Return all appointments for a given Doctor and date
+ * @param {string} doctor
+ * @param {date} date
+ * @return {rows} query result
+*/
+async function getAppointmentsByDoctor(doc, appointment_date){    
+  const db = await require('../configs/db.config').getConnection();
+  let [rows, fields] = await db.execute(`
+    SELECT
+      appointments.id AS 'appointment_id',
+      appointments.hc AS 'appointment_HC',
+      appointments.status AS 'appointment_status',
+      appointment_statuses.name AS 'appointment_status_name',
+      appointments.schedule AS 'appointment_schedule',
+      appointments.last_update AS 'appointment_last_update',
+      appointments.creation_date AS 'appointment_creation_date',
+      
+      users.doc AS 'doctor_doc',
+      users.name AS 'doctor_name',
+      users.type AS 'doctor_usertype',
+      user_types.name AS 'doctor_usertype_name',
+      
+      appointments.sector_id AS 'doctor_sector',
+      sectors.name AS 'doctor_sector_name',
+      
+      users.username AS 'doctor_username',
+      users.email AS 'doctor_email',
+      users.phone AS 'doctor_phone',
+      users.last_login AS 'doctor_last_login',
+      users.creation_date AS 'doctor_creation_date'
+      
+    FROM appointments
+
+      INNER JOIN appointment_statuses ON appointments.status = appointment_statuses.id
+      INNER JOIN users ON appointments.doctor_id = users.id
+      INNER JOIN user_types ON users.type = user_types.id
+      INNER JOIN sectors ON appointments.sector_id = sectors.id
+
+    WHERE 
+
+    appointments.doctor_id = ? AND
+    CAST(appointments.schedule AS DATE) = CAST(? AS DATE)
+    
+    ORDER BY
+      appointments.status ASC,
+      appointments.schedule ASC
+
+  `,[doc, appointment_date]);
+  return rows;
+}
 
 
 async function checkInAppointment(appointmentId) {
@@ -118,5 +170,6 @@ module.exports = {
   getAllAppointments,
   getNextAppointmentsByHC,
   NewAppointment,
-  checkInAppointment
+  checkInAppointment,
+  getAppointmentsByDoctor
 }
