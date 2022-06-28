@@ -42,6 +42,7 @@ async function getAppointments(req, res) {
   }
   if ("doc" in req.userInfo) {
     const row = await appointmentModel.getAppointmentsByDoctor(req.userInfo.doc, req.userInfo.date) // Date format {string} YYYY-MM-DD
+    return res.status(200).json(row)
   }
 }
   
