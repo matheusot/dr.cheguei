@@ -13,7 +13,8 @@ import { BasePage } from '../BasePage/base-page';
 
 //const APIURL = "http://localhost:4000";
 const APIURL = "https://dr-cheguei.herokuapp.com";
-const ENABLE_GEO = true;
+const ENABLE_GEO = false;
+const MODAL_DELAY = 5000;
 const HCLength = 5;
 const HClat = -22.8268021;
 const HClon = -47.0701726;
@@ -38,6 +39,9 @@ export const Home = (): React.ReactElement => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const changeModalVisibleState = () => {
         setModalVisible((modalVisible) => !modalVisible);
+        setTimeout(() => {
+            setModalVisible((modalVisible) => !modalVisible);
+        }, MODAL_DELAY)
     }
 
     const [alertOpen, setAlertOpen] = React.useState(false);
@@ -60,6 +64,16 @@ export const Home = (): React.ReactElement => {
             hcText += input.value;
         });
         return hcText
+    }
+
+    const clearHCText = () => {
+        const inputs = document.querySelectorAll(".hc-text input");
+        inputs.forEach((el) => {
+            const input = el as HTMLInputElement;
+            input.value = "";
+        });
+        const input = document.querySelector(".hc-text input") as HTMLElement | null;
+        if (input != null) input.focus()
     }
 
     const checkHCLength = (hcText: string) => {
@@ -133,6 +147,7 @@ export const Home = (): React.ReactElement => {
         if(!checkHCLength(hcText)) {
             changeErrorMessage("Preencha o HC por completo!");
             setAlertOpen(true);
+            clearHCText()
             return;
         }
 
@@ -148,6 +163,7 @@ export const Home = (): React.ReactElement => {
             if ((location == null) || (distance > 0.1)) { // distance > 0.1km
                 changeErrorMessage("Você precisa estar localizado no HC para realizar o check-in!");
                 setAlertOpen(true);
+                clearHCText()
                 return
             }
         }
@@ -158,6 +174,7 @@ export const Home = (): React.ReactElement => {
         if (!authClientRes.hasOwnProperty("token")) {
             changeErrorMessage("Não foram encontradas consultas para este código HC!");
             setAlertOpen(true);
+            clearHCText()
             return;
         } 
 
@@ -174,6 +191,7 @@ export const Home = (): React.ReactElement => {
         setToastAppointmentDate(date);
 
         changeModalVisibleState()
+        clearHCText()
     }
 
     return (
@@ -207,7 +225,7 @@ export const Home = (): React.ReactElement => {
                     status="Confirmada!" description="Aguarde ser chamado pelo painel"
                     visible={modalVisible} fadeOut={changeModalVisibleState} />
                     
-                <Snackbar open={alertOpen} autoHideDuration={96000} onClose={handleAlertClose} sx={{
+                <Snackbar open={alertOpen} autoHideDuration={MODAL_DELAY} onClose={handleAlertClose} sx={{
                     position: 'static',
                     height: '100%',
                 }}>
