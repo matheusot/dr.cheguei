@@ -9,6 +9,18 @@ import { DrChegueiHeader } from '../DrChegueiHeader/dr-cheguei-header';
 import { SegmentedTextField } from '../SegmentedTextField/segmented-text-field';
 import { BasePage } from '../BasePage/base-page';
 
+
+
+//const APIURL = "http://localhost:4000";
+const APIURL = "https://dr-cheguei.herokuapp.com";
+const ENABLE_GEO = false;
+const MODAL_DELAY = 5000;
+const HCLength = 5;
+const HClat = -22.8268021;
+const HClon = -47.0701726;
+
+
+
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
     ref,
@@ -17,25 +29,22 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 export const Home = (): React.ReactElement => {
-
-    const APIURL = "http://localhost:4000";
-
     const navigate = useNavigate();
-
-    const HCLength = 5;
    
     const [errorMessage, setErrorMessage] = React.useState("");
     const changeErrorMessage = (text: string) => {
         setErrorMessage((errorMessage) => errorMessage = text);
     }
 
-    const [visible, setVisible] = React.useState(false);
-    const changeVisibleState = () => {
-        setVisible((visible) => !visible);
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const changeModalVisibleState = () => {
+        setModalVisible((modalVisible) => !modalVisible);
+        setTimeout(() => {
+            setModalVisible((modalVisible) => !modalVisible);
+        }, MODAL_DELAY)
     }
 
     const [alertOpen, setAlertOpen] = React.useState(false);
-    
     const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
@@ -47,76 +56,142 @@ export const Home = (): React.ReactElement => {
     const [toastDoctorName, setToastDoctorName] = React.useState("");
     const [toastAppointmentDate, setToastAppointmentDate] = React.useState("");
 
-    async function clickCheckinButton() {
+    const getHCText = () => {
         let hcText = "";
         const inputs = document.querySelectorAll(".hc-text input");
         inputs.forEach((el) => {
             const input = el as HTMLInputElement;
             hcText += input.value;
         });
+        return hcText
+    }
 
+    const clearHCText = () => {
+        const inputs = document.querySelectorAll(".hc-text input");
+        inputs.forEach((el) => {
+            const input = el as HTMLInputElement;
+            input.value = "";
+        });
+        const input = document.querySelector(".hc-text input") as HTMLElement | null;
+        if (input != null) input.focus()
+    }
+
+    const checkHCLength = (hcText: string) => {
         if (hcText.length < HCLength) {
-            changeErrorMessage("Preencha o HC por completo!");
-            setAlertOpen(true);
-            return
+            return false;
         }
         setToastHCText("HC-" + hcText);
+        return true;
+    }
 
-        let reqData = {
-            hc: "",
-            token: ""
-        };
-        console.log("API Session");
-        
-        await axios.post(`${APIURL}/session`, { "hc": hcText })
+    const convertIsoDateToDateString = (dateStr: string) => {
+        const date = new Date(dateStr); 
+        return date.toLocaleString("pt-br", 
+            { weekday: "long", year: 'numeric', month: "long", day: 'numeric' }
+        );
+    }
+
+    const checkInAppointment = async (token: string) => {
+        const config = { "headers": { "Authorization": token } };
+        return await axios.get(`${APIURL}/appointment?checkin=true`, config)
         .then((res) => {
-            if (res.status === 200) {
-                reqData = res.data;
-            }
-            console.log("API Session Done");
+            return res.data; 
         })
         .catch((err) => {
             const res = err.response;
-            if (res.status === 401) {
-                console.log(res.data.msg)
-            }
-            console.log("API Session Done");
-            console.error(err);
-            return
+            return res.data; 
+        })
+    }
+
+    const authClientWithHC = async (hcText: string) => {
+        return await axios.post(`${APIURL}/session`, { "hc": hcText })
+        .then((res) => {
+            return res.data;
+        })
+        .catch((err) => {
+            const res = err.response;
+            return res.data;             
         });
+    }
 
-        console.log(reqData);
+    const getClientLatLon = async (): Promise<any> => {
+        if ("geolocation" in navigator) {
+            return new Promise((resolve, reject) => 
+                navigator.geolocation.getCurrentPosition(resolve, reject))
+        }
+        return null;
+    }
 
-        console.log("API Appointment");
+    const degToRad = (deg: number) => {
+        return deg * (Math.PI/180);
+    }
 
-        await axios.get(`${APIURL}/appointment?checkin=true`, {
-            headers: {
-                "Authorization": reqData.token
+    const getDistanceFromLatLonInKm = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+        const R = 6371;
+        const dLat = degToRad(lat2-lat1); // degToRad below
+        const dLon = degToRad(lon2-lon1); 
+        const a = 
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(degToRad(lat1)) * Math.cos(degToRad(lat2)) * 
+          Math.sin(dLon/2) * Math.sin(dLon/2); 
+        const b = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        return R * b; // Distance in km
+      }
+      
+
+
+    const clickCheckinButton = async () => {
+
+        /* Get and verify HC code */
+        const hcText = getHCText();
+        if(!checkHCLength(hcText)) {
+            changeErrorMessage("Preencha o HC por completo!");
+            setAlertOpen(true);
+            clearHCText()
+            return;
+        }
+
+        /* Get lat, lon and verify distance from HC */
+        if (ENABLE_GEO) {
+            const location = await getClientLatLon();
+            let distance = 1;
+            if (location != null) {
+                const clientLat = location.coords.latitude;
+                const clientLon = location.coords.longitude;
+                distance = getDistanceFromLatLonInKm(HClat, HClon, clientLat, clientLon);
             }
-        })
-        .then((res) => {
-            if (res.status === 200) {
-                setToastDoctorName(res.data.doctor_name);
-                console.log(res.data.appointment_schedule)
-                let date = new Date(res.data.appointment_schedule); 
-                console.log(date)
-                setToastAppointmentDate(date.toLocaleString("pt-br",
-                    { weekday: "long", year: 'numeric', month: "long", day: 'numeric' }))
+            if ((location == null) || (distance > 0.1)) { // distance > 0.1km
+                changeErrorMessage("Você precisa estar localizado no HC para realizar o check-in!");
+                setAlertOpen(true);
+                clearHCText()
+                return
             }
-            console.log("API Appoint Done");
-        })
-        .catch((err) => {
-            const res = err.response;
-            if (res.status === 401) {
-                console.log(res.data.msg)
-            }
-            console.error(err);
-            console.log("API Appoint Done");
-        })
-    
-        changeVisibleState()
+        }
 
-        console.log(hcText);
+        /* Authenticate client */
+        const authClientRes: any = await authClientWithHC(hcText)
+        console.log(authClientRes);
+        if (!authClientRes.hasOwnProperty("token")) {
+            changeErrorMessage("Não foram encontradas consultas para este código HC!");
+            setAlertOpen(true);
+            clearHCText()
+            return;
+        } 
+
+        /* Check-in client */
+        const checkInAppointmentRes: any = await checkInAppointment(authClientRes.token);
+        console.log(checkInAppointmentRes);
+        if (!checkInAppointmentRes.hasOwnProperty("appointment_id")) {
+            changeErrorMessage("Não foram encontradas consultas para este código HC!");
+            setAlertOpen(true);
+            return;
+        }
+        setToastDoctorName(checkInAppointmentRes.doctor_name);
+        const date = convertIsoDateToDateString(checkInAppointmentRes.appointment_schedule);
+        setToastAppointmentDate(date);
+
+        changeModalVisibleState()
+        clearHCText()
     }
 
     return (
@@ -148,9 +223,9 @@ export const Home = (): React.ReactElement => {
             <Stack spacing={2} sx={{ width: '100%', height: 200 }}>
                 <Toast hc={toastHCText} doc={toastDoctorName} date={toastAppointmentDate}
                     status="Confirmada!" description="Aguarde ser chamado pelo painel"
-                    visible={visible} fadeOut={changeVisibleState} />
+                    visible={modalVisible} fadeOut={changeModalVisibleState} />
                     
-                <Snackbar open={alertOpen} autoHideDuration={96000} onClose={handleAlertClose} sx={{
+                <Snackbar open={alertOpen} autoHideDuration={MODAL_DELAY} onClose={handleAlertClose} sx={{
                     position: 'static',
                     height: '100%',
                 }}>
