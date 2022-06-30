@@ -4,6 +4,7 @@ import MuiButton, { ButtonProps } from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
 const primaryColor = "#BA2121";
+const hoverPrimaryColor = "#ab1818";
 const textColor = "#464646";
 const fieldColor = "#E9E9E9";
 const defaultBorderRadius = 5;
@@ -16,7 +17,7 @@ export const PrimaryButton = styled(MuiButton)<ButtonProps>(({ theme }) => ({
     fontWeight: "700",
     width: "100%",
     '&:hover': {
-        backgroundColor: "#ab1818",
+        backgroundColor: hoverPrimaryColor,
     },
 }));
 
@@ -40,7 +41,7 @@ export const RoundedPrimaryButton = styled(MuiButton)<ButtonProps>(({ theme }) =
     width: "100%",
     maxWidth: "315px",
     '&:hover': {
-        backgroundColor: "#ab1818",
+        backgroundColor: hoverPrimaryColor,
     },
 }));
 
