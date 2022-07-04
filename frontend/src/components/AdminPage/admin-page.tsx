@@ -20,9 +20,7 @@ export const AdminPage = (): React.ReactElement => {
                     {mockArray.map((listItem, index) => {
                         return (
                             <ListItem key={index}>
-                                <Toast 
-                                    visible={true}
-                                />
+                                
                             </ListItem>
                         )
                     })}  

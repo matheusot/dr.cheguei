@@ -1,9 +1,10 @@
-import { forwardRef } from "react";
+import { useState, forwardRef } from "react";
 import { Box, Dialog, DialogContent, DialogTitle, IconButton, Slide } from "@mui/material"
 import CloseIcon from '@mui/icons-material/Close';
 import { TransitionProps } from "@mui/material/transitions";
 import { DialogPaper, RoundedPrimaryButton } from "../../styles";
 import { SegmentedTextField } from "../SegmentedTextField/segmented-text-field";
+import { DrChegueiCalendar } from "../DrChegueiCalendar/dr-cheguei-calendar";
 
 const Transition = forwardRef(function Transition(
     props: TransitionProps & {
@@ -19,6 +20,8 @@ export const AppointmentDialog = (
         open: boolean
         setOpenFunction: Function
     }): React.ReactElement => {
+
+        const [date, setSelectedDate] = useState<Date | unknown>(new Date());
     
         return (
         <Dialog
@@ -44,6 +47,10 @@ export const AppointmentDialog = (
                     segments={7} 
                     separator="-"
                     separatorAt={2}
+                />
+                <DrChegueiCalendar
+                    selectedDate={date}
+                    setSelectedDate={setSelectedDate}
                 />
                 <RoundedPrimaryButton variant="contained" size="small">Marcar Consulta</RoundedPrimaryButton>
             </DialogContent>

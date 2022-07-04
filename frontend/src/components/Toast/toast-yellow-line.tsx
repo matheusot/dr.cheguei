@@ -1,5 +1,5 @@
-import { Box, Card, CardContent, Fade, Typography } from "@mui/material";
-import { CardClose } from "../../styles";
+import { Box, Card, CardContent, Fade, Typography, IconButton } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 
 export const ToastYellowLine = ({
     color,
@@ -28,7 +28,12 @@ export const ToastYellowLine = ({
                         que a gente te ajude!
                     </Typography>
                 </CardContent>
-                <CardClose variant="text" onClick={fadeOut}/>
+                <IconButton
+                        aria-label="Fechar"
+                        onClick={fadeOut}
+                    >
+                        <CloseIcon aria-label="Fechar"/>
+                </IconButton>
                 <Box sx={{
                         flex: '0 0 100%',
                         display: 'block',

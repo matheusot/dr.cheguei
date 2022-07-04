@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { InlineFlexWrapper, TextFieldSegment, DrChegueiText } from "../../styles";
+import { InlineFlexWrapper, TextFieldSegment } from "../../styles";
 
 
 export const SegmentedTextField = (

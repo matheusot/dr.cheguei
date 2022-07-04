@@ -160,31 +160,6 @@ export const DrChegueiToastDescription = styled(Typography)`
     color: ${textColor};
 `;
 
-export const CardClose = styled(MuiButton)`
-    & {
-        display: block;
-        line-height: 0;
-        min-width: 0;
-        position: fixed;
-        right: 1.5rem;
-    }
-    &:hover {
-        background-color: transparent;
-    }
-    &::before {
-        display: block;
-        margin: 0;
-        padding: 1rem 0.5rem;
-        font-size: 1.5rem;
-        cursor: pointer;
-        content: '×';
-        color: ${textColor};
-    }
-    .MuiTouchRipple-root {
-        display: none;
-    }
-`;
-
 export const DialogPaper = styled(Paper)`
     border-radius: 20px;
 `;
