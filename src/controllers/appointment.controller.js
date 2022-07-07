@@ -41,14 +41,30 @@ async function getAppointments(req, res) {
     return res.status(200).json(row)
   }
   if ("doc" in req.userInfo) {
-    const row = await appointmentModel.getAppointmentsByDoctor(req.userInfo.doc, req.userInfo.date) // Date format {string} YYYY-MM-DD
-    return res.status(200).json(row)
+    const row = await appointmentModel.getAppointmentsByDoctor(req.userInfo.id, req.body.date); // Date format {string} YYYY-MM-DD
+    return res.status(200).json(row);
   }
 }
   
 
+/* 
+ * Gets all appointments update to state 2 in the last 5 minutes
+ * return: appointments found in DB
+*/
+async function getNewAppointments(req, res) {
+  let row;
+  if("doc" in req.userInfo){
+    row = await appointmentModel.News(doc_id=req.userInfo.id);
+  }
+  else{
+    row = await appointmentModel.News();
+  }
+  
+  return res.status(200).json(row)
+}
   
 module.exports = {
   addAppointment,
-  getAppointments
+  getAppointments,
+  getNewAppointments
 };

@@ -42,6 +42,9 @@ async function getAllAppointments(){
 
 async function getNextAppointmentsByHC(hc){    
   const db = await require('../configs/db.config').getConnection();
+  let date_now = new Date();
+  const timezone = (new Date()).getTimezoneOffset() * 60000;
+  date_now = new Date(date_now.getTime() - timezone).toISOString().replace(/T/, ' ').replace(/\..+/, '');
   let [rows, fields] = await db.execute(`
     SELECT
       appointments.id AS 'appointment_id',
@@ -75,7 +78,7 @@ async function getNextAppointmentsByHC(hc){
       
     WHERE 
       
-      DATE(appointments.schedule) >= DATE(NOW()) AND
+      DATE(appointments.schedule) >= DATE(?) AND
       appointments.status = 1 AND
       appointments.hc = ?
       
@@ -83,7 +86,7 @@ async function getNextAppointmentsByHC(hc){
 
       appointments.schedule
   `, 
-    [hc]
+    [date_now, hc]
   );
   return rows[0];
 }
@@ -144,10 +147,13 @@ async function getAppointmentsByDoctor(doc, appointment_date){
 
 async function checkInAppointment(appointmentId) {
   const db = await require('../configs/db.config').getConnection();
-  let [rows, fields] = await db.execute(`UPDATE appointments SET status=2 WHERE id=?`, 
-    [appointmentId]
+  let date_now = new Date();
+  const timezone = (new Date()).getTimezoneOffset() * 60000;
+  date_now = new Date(date_now.getTime() - timezone).toISOString().replace(/T/, ' ').replace(/\..+/, '');
+  let [rows, fields] = await db.execute(`UPDATE appointments SET status=2, last_update=? WHERE id=?`, 
+    [date_now, appointmentId]
   );
-  console.log([rows, fields])
+  return rows;
 }
 
 
@@ -165,11 +171,62 @@ async function NewAppointment(sector_id, doctor_id, hc, status, schedule, last_u
   }
 }
 
+async function News(doc_id=false){
+  const db = await require('../configs/db.config').getConnection();
+  const date_now = new Date();
+  const timezone = (new Date()).getTimezoneOffset() * 60000;
+  const date_begin = new Date(date_now.getTime() - 5*60000 - timezone).toISOString().replace(/T/, ' ').replace(/\..+/, ''); //ultimos 5 minutos
+  const date_end = new Date(date_now.getTime() + 1*60000 - timezone).toISOString().replace(/T/, ' ').replace(/\..+/, '');
+  let sql = `
+  SELECT 
+    appointments.id AS 'appointment_id',
+    appointments.hc AS 'appointment_HC',
+    appointments.status AS 'appointment_status',
+    appointment_statuses.name AS 'appointment_status_name',
+    appointments.schedule AS 'appointment_schedule',
+    appointments.last_update AS 'appointment_last_update',
+    appointments.creation_date AS 'appointment_creation_date',
+  
+    users.doc AS 'doctor_doc',
+    users.name AS 'doctor_name',
+    users.type AS 'doctor_usertype',
+    user_types.name AS 'doctor_usertype_name',
+  
+    appointments.sector_id AS 'doctor_sector',
+    sectors.name AS 'doctor_sector_name',
+  
+    users.username AS 'doctor_username',
+    users.email AS 'doctor_email',
+    users.phone AS 'doctor_phone',
+    users.last_login AS 'doctor_last_login',
+    users.creation_date AS 'doctor_creation_date'
+  
+  FROM appointments
+
+    INNER JOIN appointment_statuses ON appointments.status = appointment_statuses.id
+    INNER JOIN users ON appointments.doctor_id = users.id
+    INNER JOIN user_types ON users.type = user_types.id
+    INNER JOIN sectors ON appointments.sector_id = sectors.id
+
+  WHERE 
+  appointments.status = 2 AND 
+  `;
+  if (doc_id){
+    sql=sql+`users.id = `+doc_id+` AND `;
+  }
+  sql = sql +`appointments.last_update BETWEEN '`+date_begin+`' AND '`+date_end+`'`;
+  let [rows, fields] = await db.execute(sql);
+
+  return rows;
+  
+}
+
 
 module.exports = {
   getAllAppointments,
   getNextAppointmentsByHC,
   NewAppointment,
   checkInAppointment,
-  getAppointmentsByDoctor
+  getAppointmentsByDoctor,
+  News
 }
