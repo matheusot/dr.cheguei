@@ -1,13 +1,13 @@
-import * as React from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Box, Stack, Snackbar } from '@mui/material';
+import { Box, Stack, Snackbar, Fade } from '@mui/material';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { DrChegueiText, PrimaryButton, SecondaryButton } from '../../styles';
-import { Toast } from '../Toast/toast';
 import { DrChegueiHeader } from '../DrChegueiHeader/dr-cheguei-header';
 import { SegmentedTextField } from '../SegmentedTextField/segmented-text-field';
 import { BasePage } from '../BasePage/base-page';
+import { forwardRef, ReactElement, SyntheticEvent, useState } from 'react';
+import { DrChegueiAppointment } from '../Toast/dr-cheguei-toast';
 
 
 
@@ -21,22 +21,22 @@ const HClon = -47.0701726;
 
 
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
     ref,
 ) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export const Home = (): React.ReactElement => {
+export const Home = (): ReactElement => {
     const navigate = useNavigate();
    
-    const [errorMessage, setErrorMessage] = React.useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const changeErrorMessage = (text: string) => {
         setErrorMessage((errorMessage) => errorMessage = text);
     }
 
-    const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
     const changeModalVisibleState = () => {
         setModalVisible((modalVisible) => !modalVisible);
         setTimeout(() => {
@@ -44,17 +44,17 @@ export const Home = (): React.ReactElement => {
         }, MODAL_DELAY)
     }
 
-    const [alertOpen, setAlertOpen] = React.useState(false);
-    const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    const [alertOpen, setAlertOpen] = useState(false);
+    const handleAlertClose = (event?: SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
         setAlertOpen(false);
     };
 
-    const [toastHCText, setToastHCText] = React.useState("");
-    const [toastDoctorName, setToastDoctorName] = React.useState("");
-    const [toastAppointmentDate, setToastAppointmentDate] = React.useState("");
+    const [toastHCText, setToastHCText] = useState("");
+    const [toastDoctorName, setToastDoctorName] = useState("");
+    const [toastAppointmentDate, setToastAppointmentDate] = useState("");
 
     const getHCText = () => {
         let hcText = "";
@@ -194,12 +194,14 @@ export const Home = (): React.ReactElement => {
         clearHCText()
     }
 
+    
+
     return (
         <BasePage>
 
             <DrChegueiHeader />
 
-            <Box sx={{ width:"100%" }}>
+            <Box sx={{ width:"100%", marginBottom: "20px" }}>
                 <DrChegueiText variant="body2" align="left" sx={{ mt: "2rem", mb: "1rem" }}>
                     Insira seu código HC
                 </DrChegueiText>
@@ -221,10 +223,11 @@ export const Home = (): React.ReactElement => {
             </Box>
 
             <Stack spacing={2} sx={{ width: '100%', height: 200 }}>
-                <Toast hc={toastHCText} doc={toastDoctorName} date={toastAppointmentDate}
+                {/* <Toast hc={toastHCText} doc={toastDoctorName} date={toastAppointmentDate}
                     status="Confirmada!" description="Aguarde ser chamado pelo painel"
-                    visible={modalVisible} fadeOut={changeModalVisibleState} />
-                    
+                    visible={true} fadeOut={changeModalVisibleState} /> */}
+                
+
                 <Snackbar open={alertOpen} autoHideDuration={MODAL_DELAY} onClose={handleAlertClose} sx={{
                     position: 'static',
                     height: '100%',
