@@ -71,10 +71,15 @@ const theme = createTheme({
   },
 });
 
-export const DrChegueiCalendar = (props: {
+interface CalendarProps {
   selectedDate: Date | unknown;
   setSelectedDate: Function;
-}): ReactElement => {
+}
+
+export const DrChegueiCalendar = ({
+  selectedDate,
+  setSelectedDate
+}: CalendarProps): ReactElement => {
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider
@@ -85,8 +90,8 @@ export const DrChegueiCalendar = (props: {
         }
       >
         <CalendarPicker
-          date={props.selectedDate}
-          onChange={(newDate) => props.setSelectedDate(newDate)}
+          date={selectedDate}
+          onChange={(newDate: any) => setSelectedDate(new Date(newDate))}
           showDaysOutsideCurrentMonth
         />
       </LocalizationProvider>

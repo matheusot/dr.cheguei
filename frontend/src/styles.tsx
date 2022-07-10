@@ -45,6 +45,19 @@ export const RoundedPrimaryButton = styled(MuiButton)<ButtonProps>(({ theme }) =
     },
 }));
 
+export const RoundedSecondaryButton = styled(MuiButton)<ButtonProps>(({ theme }) => ({
+    borderRadius: RounderBorderRadius,
+    color: primaryColor,
+    backgroundColor: fieldColor,
+    fontSize: "1.1rem",
+    fontWeight: "700",
+    width: "100%",
+    maxWidth: "315px",
+    '&:hover': {
+        backgroundColor: "#E1E1E1",
+    },
+}));
+
 export const ImageBox = styled(Box)`
     display: flex;
     flex-grow: 1;

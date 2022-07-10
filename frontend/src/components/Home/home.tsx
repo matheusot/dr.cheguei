@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Box, Stack, Snackbar, Fade } from '@mui/material';
+import { Box, Stack, Snackbar } from '@mui/material';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { DrChegueiText, PrimaryButton, SecondaryButton } from '../../styles';
 import { DrChegueiHeader } from '../DrChegueiHeader/dr-cheguei-header';
 import { SegmentedTextField } from '../SegmentedTextField/segmented-text-field';
 import { BasePage } from '../BasePage/base-page';
 import { forwardRef, ReactElement, SyntheticEvent, useState } from 'react';
-import { DrChegueiAppointment } from '../Toast/dr-cheguei-toast';
+import { DrChegueiToast } from '../Toast/dr-cheguei-toast';
 
 
 
@@ -194,7 +194,13 @@ export const Home = (): ReactElement => {
         clearHCText()
     }
 
-    
+    const [openSnackbar, setOpenSnackbar] = useState(true);
+    const testeAlertData = {
+        hc: "HC 78945",
+        name: "Doutor Xama Menorrrrrrrrrrrr",
+        date: "hoje, 27 de maio às 08h",
+        status: "Confirmada!"
+    }    
 
     return (
         <BasePage>
@@ -226,7 +232,13 @@ export const Home = (): ReactElement => {
                 {/* <Toast hc={toastHCText} doc={toastDoctorName} date={toastAppointmentDate}
                     status="Confirmada!" description="Aguarde ser chamado pelo painel"
                     visible={true} fadeOut={changeModalVisibleState} /> */}
-                
+
+                <DrChegueiToast 
+                    data={testeAlertData}
+                    isOpen={openSnackbar}
+                    setIsOpen={setOpenSnackbar}
+                    autoHideDuration={3000}
+                />
 
                 <Snackbar open={alertOpen} autoHideDuration={MODAL_DELAY} onClose={handleAlertClose} sx={{
                     position: 'static',

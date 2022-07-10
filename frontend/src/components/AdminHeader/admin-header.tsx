@@ -1,8 +1,7 @@
 import { Grid, Avatar, IconButton } from "@mui/material";
 import { useState } from "react";
-import { DrChegueiTitle, RoundedPrimaryButton } from "../../styles";
+import { DrChegueiTitle, RoundedPrimaryButton, RoundedSecondaryButton } from "../../styles";
 import { AppointmentDialog } from "../AppointmentDialog/appointment-dialog";
-
 
 
 export const AdminHeader = (): React.ReactElement => {
@@ -10,25 +9,24 @@ export const AdminHeader = (): React.ReactElement => {
 
     return (
         <>
-            <Grid container sx={{ justifyContent: "center" }}>
-                <Grid
-                    item
-                >
+            <Grid container sx={{ justifyContent: "center" }} mb={6}>
+                <Grid item>
                     <DrChegueiTitle variant="h3" mb={0}/>
                 </Grid>
-                <Grid item xs={4} sm={4} md={7} lg={7}></Grid>
+                <Grid item lg></Grid>
                 <Grid
                     item
-                    xs={4} sm={4} md={3} lg={3}
+                    lg
                     sx={
                         {
                             display: "flex",
                             alignItems: "center",
-                            justifyContent: "space-between",
+                            justifyContent: "flex-end",
                             flexWrap: "wrap"
                         }
                     }
                 >
+                    <RoundedSecondaryButton variant="contained" size="small">Cadastrar Médico</RoundedSecondaryButton>
                     <RoundedPrimaryButton variant="contained" size="small" onClick={() => setOpen(true)}>Marcar Consulta</RoundedPrimaryButton>
                     <IconButton aria-label="Perfil">
                         <Avatar alt="Perfil">D</Avatar>

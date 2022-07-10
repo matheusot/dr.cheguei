@@ -1,8 +1,8 @@
-import * as React from 'react';
+import {ReactElement} from 'react';
 import { Box, Grid } from '@mui/material';
 import { ImageBox } from '../../styles';
 
-export const BasePage = ({children}: any): React.ReactElement => {
+export const BasePage = ({children}: any): ReactElement => {
     return (
         <Box sx={{ height: "100vh", width: "100vw" }}>
             <Grid

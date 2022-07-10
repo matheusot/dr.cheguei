@@ -1,5 +1,6 @@
-import { Box, Fade, Divider, Alert, Grid, createTheme, ThemeProvider } from "@mui/material";
-import { ReactElement } from "react";
+import { Box, Snackbar, Divider, Grid, createTheme, ThemeProvider } from "@mui/material";
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { forwardRef, ReactElement } from "react";
 import { DrChegueiToastTitle, DrChegueiToastSubtitle, DrChegueiToastText, DrChegueiToastStatus, DrChegueiToastDescription } from "../../styles";
 
 interface ToastProps {
@@ -11,11 +12,20 @@ interface ToastProps {
         description?: string
     },
     isOpen: boolean,
-    setIsOpen: Function
+    setIsOpen: Function,
+    autoHideDuration?: number
 }
 
 const alertTheme = createTheme({
     components: {
+        MuiSnackbar: {
+            styleOverrides: {
+                root: {
+                    zIndex: "unset",
+                    position: "unset"
+                }
+            }
+        },
         MuiAlert: {
             styleOverrides: {
                 root: {
@@ -48,22 +58,29 @@ const checkDescription = (description: string| undefined): ReactElement | null =
     )
 }
 
-export const DrChegueiAppointment = ({
+const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref,
+  ) {
+    return <MuiAlert ref={ref} {...props} />;
+});
+
+export const DrChegueiToast = ({
     data,
     isOpen,
-    setIsOpen
+    setIsOpen,
+    autoHideDuration
 }: ToastProps): ReactElement => {
     return (
         <ThemeProvider theme={alertTheme}>
 
-            <Fade in={isOpen}>
+            <Snackbar open={isOpen} autoHideDuration={autoHideDuration} onClose={() => setIsOpen(false)}>
                 <Alert
                     sx={{
                         width: "100%",
                         backgroundColor: "#E9E9E9",
                         borderRadius: "7px",
                         minHeight: "120px",
-                        marginTop: "15px",
                         message: {
                             width: "100%",
                         }
@@ -92,7 +109,7 @@ export const DrChegueiAppointment = ({
                         <Grid item sm={1} md={1} lg={1}>
                             <Divider orientation="vertical" variant="middle"/>
                         </Grid>
-                        <Grid item sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: "1" }}>
+                        <Grid item sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: "1", paddingRight: "32px" }}>
                             <DrChegueiToastStatus
                                 sx={{
                                     color: getStatusColor(data.status),
@@ -106,7 +123,7 @@ export const DrChegueiAppointment = ({
                         </Grid>
                     </Grid>
                 </Alert>
-            </Fade>
+            </Snackbar>
         </ThemeProvider>
     );
 }
