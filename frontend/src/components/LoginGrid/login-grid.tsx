@@ -2,7 +2,12 @@ import {ReactElement} from 'react';
 import { Box, Grid } from '@mui/material';
 import { ImageBox } from '../../styles';
 
-export const BasePage = ({children}: any): ReactElement => {
+interface loginGridProps {
+    imageUrl: string;
+    children: ReactElement;
+}
+
+export const LoginGrid = ({ imageUrl, children }: loginGridProps): ReactElement => {
     return (
         <Box sx={{ height: "100vh", width: "100vw" }}>
             <Grid
@@ -13,7 +18,7 @@ export const BasePage = ({children}: any): ReactElement => {
                 wrap="nowrap"
             >
                 <Grid item xs={0} sm={4} md={6} lg={7}>
-                    <ImageBox image="/home.svg"></ImageBox>
+                    <ImageBox image={imageUrl}></ImageBox>
                 </Grid>
 
                 <Grid

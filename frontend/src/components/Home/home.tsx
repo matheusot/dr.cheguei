@@ -5,21 +5,18 @@ import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { DrChegueiText, PrimaryButton, SecondaryButton } from '../../styles';
 import { DrChegueiHeader } from '../DrChegueiHeader/dr-cheguei-header';
 import { SegmentedTextField } from '../SegmentedTextField/segmented-text-field';
-import { BasePage } from '../BasePage/base-page';
+import { LoginGrid } from '../LoginGrid/login-grid';
 import { forwardRef, ReactElement, SyntheticEvent, useState } from 'react';
 import { DrChegueiToast } from '../Toast/dr-cheguei-toast';
-
 
 
 //const APIURL = "http://localhost:4000";
 const APIURL = "https://dr-cheguei.herokuapp.com";
 const ENABLE_GEO = false;
-const MODAL_DELAY = 5000;
+const defaultDelay = 5000;
 const HCLength = 5;
 const HClat = -22.8268021;
 const HClon = -47.0701726;
-
-
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -34,14 +31,6 @@ export const Home = (): ReactElement => {
     const [errorMessage, setErrorMessage] = useState("");
     const changeErrorMessage = (text: string) => {
         setErrorMessage((errorMessage) => errorMessage = text);
-    }
-
-    const [modalVisible, setModalVisible] = useState(false);
-    const changeModalVisibleState = () => {
-        setModalVisible((modalVisible) => !modalVisible);
-        setTimeout(() => {
-            setModalVisible((modalVisible) => !modalVisible);
-        }, MODAL_DELAY)
     }
 
     const [alertOpen, setAlertOpen] = useState(false);
@@ -190,7 +179,6 @@ export const Home = (): ReactElement => {
         const date = convertIsoDateToDateString(checkInAppointmentRes.appointment_schedule);
         setToastAppointmentDate(date);
 
-        changeModalVisibleState()
         clearHCText()
     }
 
@@ -203,59 +191,60 @@ export const Home = (): ReactElement => {
     }    
 
     return (
-        <BasePage>
-
-            <DrChegueiHeader />
-
-            <Box sx={{ width:"100%", marginBottom: "20px" }}>
-                <DrChegueiText variant="body2" align="left" sx={{ mt: "2rem", mb: "1rem" }}>
-                    Insira seu código HC
-                </DrChegueiText>
-                <SegmentedTextField
-                    segments={HCLength + 2} 
-                    separator="-"
-                    separatorAt={2}
+        <LoginGrid imageUrl="/home.svg">
+            <>
+                <DrChegueiHeader
+                    subtitle="Evite filas avisando o seu médico que você está pronto para ser atendido em sua consulta agendada."
                 />
+                <Box sx={{ width:"100%", marginBottom: "20px" }}>
+                    <DrChegueiText variant="body2" align="left" sx={{ mt: "2rem", mb: "1rem" }}>
+                        Insira seu código HC
+                    </DrChegueiText>
+                    <SegmentedTextField
+                        segments={HCLength + 2} 
+                        separator="-"
+                        separatorAt={2}
+                    />
 
-                <PrimaryButton variant="contained" size="large"
-                    sx={{ mb: "0.7rem" }} onClick={clickCheckinButton}>
-                    Avisar meu médico que cheguei
-                </PrimaryButton>
-                
-                <SecondaryButton variant="contained" size="large"
-                    onClick={() => navigate(`/more-info`)}>
-                    Preciso de ajuda
-                </SecondaryButton>
-            </Box>
+                    <PrimaryButton variant="contained" size="large"
+                        sx={{ mb: "0.7rem" }} onClick={clickCheckinButton}>
+                        Avisar meu médico que cheguei
+                    </PrimaryButton>
+                    
+                    <SecondaryButton variant="contained" size="large"
+                        onClick={() => navigate(`/more-info`)}>
+                        Preciso de ajuda
+                    </SecondaryButton>
+                </Box>
 
-            <Stack spacing={2} sx={{ width: '100%', height: 200 }}>
-                {/* <Toast hc={toastHCText} doc={toastDoctorName} date={toastAppointmentDate}
-                    status="Confirmada!" description="Aguarde ser chamado pelo painel"
-                    visible={true} fadeOut={changeModalVisibleState} /> */}
+                <Stack spacing={2} sx={{ width: '100%', height: 200 }}>
+                    {/* <Toast hc={toastHCText} doc={toastDoctorName} date={toastAppointmentDate}
+                        status="Confirmada!" description="Aguarde ser chamado pelo painel"
+                        visible={true} fadeOut={changeModalVisibleState} /> */}
 
-                <DrChegueiToast 
-                    data={testeAlertData}
-                    isOpen={openSnackbar}
-                    setIsOpen={setOpenSnackbar}
-                    autoHideDuration={3000}
-                />
+                    <DrChegueiToast 
+                        data={testeAlertData}
+                        isOpen={openSnackbar}
+                        setIsOpen={setOpenSnackbar}
+                        autoHideDuration={defaultDelay}
+                    />
 
-                <Snackbar open={alertOpen} autoHideDuration={MODAL_DELAY} onClose={handleAlertClose} sx={{
-                    position: 'static',
-                    height: '100%',
-                }}>
-                    <Alert onClose={handleAlertClose} severity="error" sx={{
-                        width: '100%',
+                    <Snackbar open={alertOpen} autoHideDuration={defaultDelay} onClose={handleAlertClose} sx={{
+                        position: 'static',
                         height: '100%',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1.2em',
                     }}>
-                        {errorMessage}
-                    </Alert>
-                </Snackbar>
-            </Stack>
-                
-        </BasePage>
+                        <Alert onClose={handleAlertClose} severity="error" sx={{
+                            width: '100%',
+                            height: '100%',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '1.2em',
+                        }}>
+                            {errorMessage}
+                        </Alert>
+                    </Snackbar>
+                </Stack>
+            </>
+        </LoginGrid>
     )
 }

@@ -5,7 +5,7 @@ import ptBRLocale from "date-fns/locale/pt-BR";
 import type from "@mui/x-date-pickers/themeAugmentation";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 
 const theme = createTheme({
   components: {
