@@ -1,5 +1,5 @@
 import { Box, TextField } from "@mui/material"
-import { FormEvent, FormEventHandler, ReactElement, useState } from "react"
+import { FormEvent, ReactElement, useState } from "react"
 import { PrimaryButton } from "../../styles"
 import { DrChegueiHeader } from "../DrChegueiHeader/dr-cheguei-header"
 import { LoginGrid } from "../LoginGrid/login-grid"

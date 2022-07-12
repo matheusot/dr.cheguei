@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 
 const primaryColor = "#BA2121";
 const hoverPrimaryColor = "#ab1818";
+const successColor = "#21BA71"
 const textColor = "#464646";
 const fieldColor = "#E9E9E9";
 const defaultBorderRadius = 5;
@@ -163,14 +164,29 @@ export const DrChegueiToastText = styled(Typography)`
 export const DrChegueiToastStatus = styled(Typography)`
     font-size: 1.3rem;
     font-size: 1.3rem;
-    font-weight: 900;    
+    font-weight: 900;
     color: ${primaryColor};
-`;
+    `;
 
 export const DrChegueiToastDescription = styled(Typography)`
     font-size: 1.0rem;
     line-height: 1.1rem; 
     color: ${textColor};
+    `;
+
+export const DrChegueiToastQueuePosition = styled(Box)<{ timeToGo: boolean}>`
+    display: flex;
+    flex-direction: ${props => props.timeToGo ? "row" : "column"};
+    text-align: center;
+    align-items: center;
+    width: 49px;
+    height: 49px;
+    border-radius: 100%;
+    background-color: ${props => props.timeToGo ? successColor : primaryColor};
+    font-size: ${props => props.timeToGo ? "inherit" : "2rem"};
+    text-transform: uppercase;
+    color: white;
+    font-weight: 900;
 `;
 
 export const DialogPaper = styled(Paper)`

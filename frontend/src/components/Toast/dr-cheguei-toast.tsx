@@ -1,7 +1,7 @@
 import { Box, Snackbar, Divider, Grid, createTheme, ThemeProvider } from "@mui/material";
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { forwardRef, ReactElement } from "react";
-import { DrChegueiToastTitle, DrChegueiToastSubtitle, DrChegueiToastText, DrChegueiToastStatus, DrChegueiToastDescription } from "../../styles";
+import { DrChegueiToastTitle, DrChegueiToastSubtitle, DrChegueiToastText, DrChegueiToastStatus, DrChegueiToastDescription, DrChegueiToastQueuePosition } from "../../styles";
 
 interface ToastProps {
     data: {
@@ -9,7 +9,8 @@ interface ToastProps {
         name: string,
         date: string,
         status: string,
-        description?: string
+        description?: string,
+        queuePosition?: string
     },
     isOpen: boolean,
     setIsOpen: Function,
@@ -47,6 +48,7 @@ const getStatusColor = (status: string): string => {
     return "#2AB7D6";
 }
 
+
 const checkDescription = (description: string| undefined): ReactElement | null => {
     return (
         description ?
@@ -55,6 +57,33 @@ const checkDescription = (description: string| undefined): ReactElement | null =
         </DrChegueiToastDescription>
         :
         null
+    )
+}
+
+const checkStatus = (status: string, description: string | undefined, queuePosition: string | undefined): ReactElement => {
+    return (
+        queuePosition ?
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center"}}>
+            <DrChegueiToastQueuePosition
+                timeToGo={ queuePosition === "1" }
+            >
+                {queuePosition === "1" ? "Sua Vez" : queuePosition + "º"}
+            </DrChegueiToastQueuePosition>
+            <DrChegueiToastDescription sx={{ textTransform: "uppercase" }} variant="body2" mt={1}>Posição na fila</DrChegueiToastDescription>
+        </Box>
+        :
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <DrChegueiToastStatus
+                sx={{
+                    color: getStatusColor(status),
+                    textAlign: description? "left" : "center"
+                }}
+                variant="h6"
+                >
+                {status}
+            </DrChegueiToastStatus>
+            { checkDescription(description) }
+        </Box>
     )
 }
 
@@ -101,25 +130,29 @@ export const DrChegueiToast = ({
                                 <DrChegueiToastTitle variant="h3">
                                     {data.name} 
                                 </DrChegueiToastTitle>
-                                <DrChegueiToastText variant="body2">
+                                <DrChegueiToastText variant="body2" gutterBottom={data.queuePosition !== undefined}>
                                     {data.date}
                                 </DrChegueiToastText>
+                                {
+                                    data.description && data.queuePosition ?
+                                    <Box>
+                                        <DrChegueiToastText sx={{ fontWeight: "bold", color: "#000000" }} variant="body1">
+                                            {data.status}
+                                        </DrChegueiToastText>
+                                        <DrChegueiToastText sx={{ fontWeight: "bold", color: "#000000" }} variant="body1">
+                                            {data.description}
+                                        </DrChegueiToastText>
+                                    </Box>
+                                    :
+                                    null
+                                }
                             </Box>
                         </Grid>
                         <Grid item sm={1} md={1} lg={1}>
                             <Divider orientation="vertical" variant="middle"/>
                         </Grid>
                         <Grid item sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: "1", paddingRight: "32px" }}>
-                            <DrChegueiToastStatus
-                                sx={{
-                                    color: getStatusColor(data.status),
-                                    textAlign: data.description? "left" : "center"
-                                }}
-                                variant="h6"
-                                >
-                                {data.status}
-                            </DrChegueiToastStatus>
-                            { checkDescription(data.description) }
+                            { checkStatus(data.status, data.description, data.queuePosition) }
                         </Grid>
                     </Grid>
                 </Alert>
