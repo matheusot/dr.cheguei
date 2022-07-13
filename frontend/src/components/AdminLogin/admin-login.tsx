@@ -4,12 +4,12 @@ import { PrimaryButton } from "../../styles"
 import { DrChegueiHeader } from "../DrChegueiHeader/dr-cheguei-header"
 import { LoginGrid } from "../LoginGrid/login-grid"
 
-interface formFields {
+interface FormFields {
     email: string;
     password: string;
 }
 
-const sendLoginForm = (values: formFields): void => {
+const sendLoginForm = (values: FormFields): void => {
     
 }
 
@@ -45,10 +45,10 @@ export const AdminLogin = (): ReactElement => {
                         id="adminEmail"
                         label="Email"
                         variant="outlined"
+                        type="email"
                         required
                         margin="normal"
                         onChange={handleChange}
-                        
                         />
                     <TextField
                         id="adminPassword"

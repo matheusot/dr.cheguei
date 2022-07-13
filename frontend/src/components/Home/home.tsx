@@ -189,7 +189,7 @@ export const Home = (): ReactElement => {
         date: "hoje, 27 de maio às 08h",
         status: "Confirmada!",
         description: "Aguarda cria",
-        queuePosition: undefined
+        queuePosition: "1"
     }    
 
     return (
@@ -228,6 +228,7 @@ export const Home = (): ReactElement => {
                         data={testeAlertData}
                         isOpen={openSnackbar}
                         setIsOpen={setOpenSnackbar}
+                        autoHideDuration={defaultDelay}
                     />
 
                     <Snackbar open={alertOpen} autoHideDuration={defaultDelay} onClose={handleAlertClose} sx={{

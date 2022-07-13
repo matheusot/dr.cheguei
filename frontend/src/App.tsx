@@ -13,16 +13,40 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
   components: {
-    MuiTextField: {
+    MuiInputLabel: {
       styleOverrides: {
         root: {
-          '& label.Mui-focused': {
+          '&.Mui-focused': {
             color: "black",
           },
-          '& .MuiOutlinedInput-root': {
+        }
+      }
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '&.MuiInputBase-colorPrimary': {
             '&.Mui-focused fieldset': {
               borderColor: 'red',
             },
+          }
+        }
+      }
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focused": {
+            color: 'red',
+          }
+        }
+      }
+    },
+    MuiRadio: {
+      styleOverrides: {
+        root: {
+          "&.Mui-checked": {
+            color: 'red',
           }
         }
       }
