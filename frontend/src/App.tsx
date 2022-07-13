@@ -10,6 +10,7 @@ import { AdminPage } from './components/AdminPage/admin-page';
 import { AdminLogin } from './components/AdminLogin/admin-login';
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { NewInstitution } from './components/NewInstitution/new-institution';
 
 const theme = createTheme({
   components: {
@@ -65,6 +66,7 @@ function App() {
             <Route path="/more-info" element={<MoreInfo />}></Route>
             <Route path="/admin" element={<AdminPage />}></Route>
             <Route path="/admin-login" element={<AdminLogin />}></Route>
+            <Route path="/new-institution" element={<NewInstitution />}></Route>
           </Routes>
         </Router>
       </CssBaseline>

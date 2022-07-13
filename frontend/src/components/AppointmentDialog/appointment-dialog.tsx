@@ -56,6 +56,7 @@ export const AppointmentDialog = (
                     segments={7} 
                     separator="-"
                     separatorAt={2}
+                    autoFocusOn={3}
                 />
                 <DrChegueiCalendar
                     selectedDate={date}

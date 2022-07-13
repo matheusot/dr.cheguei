@@ -206,6 +206,9 @@ export const Home = (): ReactElement => {
                         segments={HCLength + 2} 
                         separator="-"
                         separatorAt={2}
+                        defaultValuesString="HC"
+                        defaultValuesAt={[0, 1]}
+                        autoFocusOn={3}
                     />
 
                     <PrimaryButton variant="contained" size="large"
