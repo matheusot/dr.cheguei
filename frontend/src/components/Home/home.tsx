@@ -13,10 +13,17 @@ import { DrChegueiToast } from '../Toast/dr-cheguei-toast';
 //const APIURL = "http://localhost:4000";
 const APIURL = "https://dr-cheguei.herokuapp.com";
 const ENABLE_GEO = false;
-const defaultDelay = 5000;
+const defaultDelay = 500000;
 const HCLength = 5;
 const HClat = -22.8268021;
 const HClon = -47.0701726;
+const AlertData = {
+    hc: "",
+    name: "",
+    date: "",
+    status: "",
+    description: ""
+};
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -34,16 +41,13 @@ export const Home = (): ReactElement => {
     }
 
     const [alertOpen, setAlertOpen] = useState(false);
+    const [toastOpen, setToastOpen] = useState(false);
     const handleAlertClose = (event?: SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
         setAlertOpen(false);
     };
-
-    const [toastHCText, setToastHCText] = useState("");
-    const [toastDoctorName, setToastDoctorName] = useState("");
-    const [toastAppointmentDate, setToastAppointmentDate] = useState("");
 
     const getHCText = () => {
         let hcText = "";
@@ -69,7 +73,6 @@ export const Home = (): ReactElement => {
         if (hcText.length < HCLength) {
             return false;
         }
-        setToastHCText("HC-" + hcText);
         return true;
     }
 
@@ -136,6 +139,7 @@ export const Home = (): ReactElement => {
         if(!checkHCLength(hcText)) {
             changeErrorMessage("Preencha o HC por completo!");
             setAlertOpen(true);
+            setToastOpen(false);
             clearHCText()
             return;
         }
@@ -152,6 +156,7 @@ export const Home = (): ReactElement => {
             if ((location == null) || (distance > 0.1)) { // distance > 0.1km
                 changeErrorMessage("Você precisa estar localizado no HC para realizar o check-in!");
                 setAlertOpen(true);
+                setToastOpen(false);
                 clearHCText()
                 return
             }
@@ -163,6 +168,7 @@ export const Home = (): ReactElement => {
         if (!authClientRes.hasOwnProperty("token")) {
             changeErrorMessage("Não foram encontradas consultas para este código HC!");
             setAlertOpen(true);
+            setToastOpen(false);
             clearHCText()
             return;
         } 
@@ -173,24 +179,21 @@ export const Home = (): ReactElement => {
         if (!checkInAppointmentRes.hasOwnProperty("appointment_id")) {
             changeErrorMessage("Não foram encontradas consultas para este código HC!");
             setAlertOpen(true);
+            setToastOpen(false);
             return;
         }
-        setToastDoctorName(checkInAppointmentRes.doctor_name);
-        const date = convertIsoDateToDateString(checkInAppointmentRes.appointment_schedule);
-        setToastAppointmentDate(date);
-
         clearHCText()
+        
+        AlertData.hc = `HC-${hcText}`;
+        AlertData.name = `Dr(a) ` + checkInAppointmentRes.doctor_name.split(" ")[0];
+        AlertData.date = convertIsoDateToDateString(checkInAppointmentRes.appointment_schedule);
+        AlertData.status = "Confirmada!";
+        AlertData.description = "Aguarde ser chamado(a)!";
+
+        setToastOpen(true);
     }
 
-    const [openSnackbar, setOpenSnackbar] = useState(true);
-    const testeAlertData = {
-        hc: "HC 78945",
-        name: "Doutor Xama Menorrrrrrrrrrrr",
-        date: "hoje, 27 de maio às 08h",
-        status: "Confirmada!",
-        description: "Aguarda cria",
-        queuePosition: "1"
-    }    
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
     return (
         <LoginGrid imageUrl="/home.svg">
@@ -223,17 +226,12 @@ export const Home = (): ReactElement => {
                 </Box>
 
                 <Stack spacing={2} sx={{ width: '100%', height: 200 }}>
-                    {/* <Toast hc={toastHCText} doc={toastDoctorName} date={toastAppointmentDate}
-                        status="Confirmada!" description="Aguarde ser chamado pelo painel"
-                        visible={true} fadeOut={changeModalVisibleState} /> */}
-
                     <DrChegueiToast 
-                        data={testeAlertData}
-                        isOpen={openSnackbar}
+                        data={AlertData}
+                        isOpen={toastOpen}
                         setIsOpen={setOpenSnackbar}
                         autoHideDuration={defaultDelay}
                     />
-
                     <Snackbar open={alertOpen} autoHideDuration={defaultDelay} onClose={handleAlertClose} sx={{
                         position: 'static',
                         height: '100%',

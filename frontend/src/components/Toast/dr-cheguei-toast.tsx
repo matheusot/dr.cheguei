@@ -1,3 +1,4 @@
+import { GridGoldenratioSharp } from "@mui/icons-material";
 import { Box, Snackbar, Divider, Grid, createTheme, ThemeProvider } from "@mui/material";
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { forwardRef, ReactElement } from "react";
@@ -110,6 +111,8 @@ export const DrChegueiToast = ({
                         backgroundColor: "#E9E9E9",
                         borderRadius: "7px",
                         minHeight: "120px",
+                        display: "grid",
+                        gridTemplateColumns: "1fr 30px",
                         message: {
                             width: "100%",
                         }
@@ -118,21 +121,24 @@ export const DrChegueiToast = ({
                     icon={false}
                 >
                     <Grid
-                        sx={{ marginLeft: "0" }}
+                        sx={{ margin: "0", display: "grid", justifyContent: "space-around", gridTemplateColumns: "1fr 10px 1fr", gridGap: "10px" }}
                         container
-                        spacing={4}
+                        spacing={0}
                     >
-                        <Grid item>
-                            <Box>
+                        <Grid item sx={{ flexShrink: 0, flexGrow: 0 }}>
+                            <Box sx={{ textAlign: "center"}}>
                                 <DrChegueiToastSubtitle variant="h6">
                                     {data.hc}
                                 </DrChegueiToastSubtitle>
+
                                 <DrChegueiToastTitle variant="h3">
                                     {data.name} 
                                 </DrChegueiToastTitle>
+
                                 <DrChegueiToastText variant="body2" gutterBottom={data.queuePosition !== undefined}>
                                     {data.date}
                                 </DrChegueiToastText>
+
                                 {
                                     data.description && data.queuePosition ?
                                     <Box>
@@ -148,10 +154,10 @@ export const DrChegueiToast = ({
                                 }
                             </Box>
                         </Grid>
-                        <Grid item sm={1} md={1} lg={1}>
+                        <Grid item>
                             <Divider orientation="vertical" variant="middle"/>
                         </Grid>
-                        <Grid item sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: "1", paddingRight: "32px" }}>
+                        <Grid item sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0, flexGrow: 0 }}>
                             { checkStatus(data.status, data.description, data.queuePosition) }
                         </Grid>
                     </Grid>

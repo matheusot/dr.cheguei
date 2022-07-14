@@ -9,8 +9,9 @@ import { DrChegueiToast } from "../Toast/dr-cheguei-toast";
 const testeAlertData = {
     hc: "HC 78945",
     name: "Doutor Xama Menorrrrrrrrrrrr",
-    date: "hoje, 27 de maio às 08h",
-    status: "Confirmada!"
+    date: "",
+    status: "Confirmada!",
+    description: "hoje, 27 de maio às 08h",
 }
 
 const getDateString = (date: Date | unknown): string => {
@@ -55,33 +56,41 @@ export const AdminPage = (): React.ReactElement => {
     
     return (
         <Box sx={{ padding: "4rem 4rem 0 4rem" }}>
+
             <Box>
                 <AdminHeader />
             </Box>
+
             <DrChegueiText variant="body2" align="left" mt={2} mb={6}>
                 { getDateString(date) }
             </DrChegueiText>
+
             <Grid item container spacing={4} id="grid">
+                
                 <Grid item md={6} lg={6} sx={gridCss}>
                     <Stack spacing={2}>
-                        {mockArray.map((listItem, index) => {
-                            return (
-                                <DrChegueiToast
-                                    key={index}
-                                    data={listItem}
-                                    isOpen={openSnackbar}
-                                    setIsOpen={setOpenSnackbar}
-                                />
-                            )
-                        })}  
+                        {
+                            mockArray.map((listItem, index) => {
+                                return (
+                                    <DrChegueiToast
+                                        key={index}
+                                        data={listItem}
+                                        isOpen={openSnackbar}
+                                        setIsOpen={setOpenSnackbar}
+                                    />
+                                )
+                            })
+                        }  
                     </Stack>
                 </Grid>
+
                 <Grid item md={6} lg={6} sx ={{ paddingTop: "0 !important" }}>
                     <DrChegueiCalendar
                         selectedDate={date}
                         setSelectedDate={setSelectedDate}
                     />
                 </Grid>
+
             </Grid>
         </Box>
     );

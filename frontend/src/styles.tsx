@@ -155,7 +155,7 @@ export const DrChegueiToastSubtitle = styled(Typography)`
 `;
 
 export const DrChegueiToastText = styled(Typography)`
-    font-size: 1.2rem;
+    font-size: 1.0rem;
     font-weight: 400;
     line-height: 1.2rem;
     color: ${textColor};
@@ -166,13 +166,13 @@ export const DrChegueiToastStatus = styled(Typography)`
     font-size: 1.3rem;
     font-weight: 900;
     color: ${primaryColor};
-    `;
+`;
 
 export const DrChegueiToastDescription = styled(Typography)`
     font-size: 1.0rem;
     line-height: 1.1rem; 
     color: ${textColor};
-    `;
+`;
 
 export const DrChegueiToastQueuePosition = styled(Box)<{ timeToGo: boolean}>`
     display: flex;
