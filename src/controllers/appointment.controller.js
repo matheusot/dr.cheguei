@@ -41,11 +41,12 @@ async function getAppointments(req, res) {
     return res.status(200).json(row)
   }
   if ("doc" in req.userInfo) {
-    const row = await appointmentModel.getAppointmentsByDoctor(req.userInfo.id, req.body.date); // Date format {string} YYYY-MM-DD
+    const id = "all" in req.query ? null : req.userInfo.id;
+    const row = await appointmentModel.getAppointmentsByDoctor(id, req.query.date); // Date format {string} YYYY-MM-DD
     return res.status(200).json(row);
   }
 }
-  
+
 
 /* 
  * Gets all appointments update to state 2 in the last 5 minutes

@@ -121,7 +121,7 @@ export const DrChegueiToast = ({
                     icon={false}
                 >
                     <Grid
-                        sx={{ margin: "0", display: "grid", justifyContent: "space-around", gridTemplateColumns: "1fr 10px 1fr", gridGap: "10px" }}
+                        sx={{ margin: "0", display: "flex", justifyContent: "space-around", gridTemplateColumns: "1fr 10px 1fr", gridGap: "10px" }}
                         container
                         spacing={0}
                     >
@@ -154,12 +154,19 @@ export const DrChegueiToast = ({
                                 }
                             </Box>
                         </Grid>
-                        <Grid item>
-                            <Divider orientation="vertical" variant="middle"/>
-                        </Grid>
-                        <Grid item sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0, flexGrow: 0 }}>
-                            { checkStatus(data.status, data.description, data.queuePosition) }
-                        </Grid>
+                        {
+                            data.status || data.description || data.queuePosition ?
+                            <>
+                            <Grid item>
+                                <Divider orientation="vertical" variant="middle"/>
+                            </Grid> 
+                            <Grid item sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0, flexGrow: 0 }}>
+                                { checkStatus(data.status, data.description, data.queuePosition) }
+                            </Grid>
+                            </>
+                            :
+                            null
+                        }
                     </Grid>
                 </Alert>
             </Snackbar>

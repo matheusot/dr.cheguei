@@ -1,10 +1,13 @@
+import axios from 'axios';
 import { Box, Grid, Stack } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DrChegueiText } from "../../styles";
 import { AdminHeader } from "../AdminHeader/admin-header";
 import { DrChegueiCalendar } from "../DrChegueiCalendar/dr-cheguei-calendar";
 import { DrChegueiToast } from "../Toast/dr-cheguei-toast";
 
+const APIURL = "http://localhost:4000";
+//const APIURL = "https://dr-cheguei.herokuapp.com";
 
 const testeAlertData = {
     hc: "HC 78945",
@@ -49,10 +52,56 @@ const gridCss = {
 }
 
 export const AdminPage = (): React.ReactElement => {
-    const [date, setSelectedDate] = useState<Date | unknown>(new Date());
-
-    let mockArray = Array(7).fill(testeAlertData);
+    const [date, setSelectedDate] = useState<Date>(new Date());
+    const [appointmentsArray, setAppointmentsArray] = useState([]);
     const [openSnackbar, setOpenSnackbar] = useState(true);
+
+    const getAppointments = async () => {
+        console.log("getAppointments");
+        const config = { "headers": { "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsInR5cGUiOjIsImRvYyI6IjIyMjMxOCIsIm5hbWUiOiJNYXRoZXVzIFJvZHJpZ3VlcyIsInVzZXJuYW1lIjoibWF0aGV1cyIsImVtYWlsIjoibTIyMjMxOEBkYWMudW5pY2FtcC5iciIsInBob25lIjoiMTkgOTg0MDUtNzQ0NyIsImxhc3RfbG9naW4iOiIyMDIyLTA2LTEwVDEwOjQ4OjQwLjAwMFoiLCJjcmVhdGlvbl9kYXRlIjoiMjAyMi0wNi0wMVQxMDoxMTo0OS4wMDBaIiwiaWF0IjoxNjU3NzU3MTg0fQ.FwXfhZDJnGkNLp6oi6z5g6rhlIMmCx6-DeUP-KuDCG8" } };
+        const formattedDate = [
+            date.getFullYear(),
+            ('0' + (date.getMonth() + 1)).slice(-2),
+            ('0' + date.getDate()).slice(-2)
+        ].join('-');
+        return await axios.get(`${APIURL}/appointment?date=${formattedDate}&all`, config)
+        .then((res) => {
+            return res.data;
+        })
+        .catch((err) => {
+            const res = err.response;
+            return res.data;             
+        });
+    }
+    
+    const convertIsoDateToDateString = (dateStr: string) => {
+        const date = new Date(dateStr); 
+        return date.toLocaleString("pt-br", 
+            { weekday: "long", year: 'numeric', month: "long", day: 'numeric' }
+        );
+    }
+
+    console.log(date);
+
+    useEffect(() => {
+        const getAppts = async () => {
+            let appointments = await getAppointments();
+            for (let i = 0; i < appointments.length; i++) {
+                appointments[i].hc = `Dr. ` + appointments[i].doctor_name;
+                appointments[i].name = "HC-" + appointments[i].appointment_HC;
+                appointments[i].date = "";
+                appointments[i].status = appointments[i].appointment_status_name;
+                appointments[i].description = convertIsoDateToDateString(appointments[i].appointment_schedule);
+            }
+            if (appointments.length == 0) {
+                appointments.push({
+                    name: "Nenhuma consulta encontrada",
+                })
+            }
+            setAppointmentsArray(appointments);
+        }
+        getAppts();
+    }, [date]);
     
     return (
         <Box sx={{ padding: "4rem 4rem 0 4rem" }}>
@@ -70,13 +119,13 @@ export const AdminPage = (): React.ReactElement => {
                 <Grid item md={6} lg={6} sx={gridCss}>
                     <Stack spacing={2}>
                         {
-                            mockArray.map((listItem, index) => {
+                            appointmentsArray.map((listItem, index) => {
                                 return (
                                     <DrChegueiToast
                                         key={index}
                                         data={listItem}
                                         isOpen={openSnackbar}
-                                        setIsOpen={setOpenSnackbar}
+                                        setIsOpen={() => {}}
                                     />
                                 )
                             })

@@ -10,8 +10,8 @@ import { forwardRef, ReactElement, SyntheticEvent, useState } from 'react';
 import { DrChegueiToast } from '../Toast/dr-cheguei-toast';
 
 
-//const APIURL = "http://localhost:4000";
-const APIURL = "https://dr-cheguei.herokuapp.com";
+const APIURL = "http://localhost:4000";
+//const APIURL = "https://dr-cheguei.herokuapp.com";
 const ENABLE_GEO = false;
 const defaultDelay = 500000;
 const HCLength = 5;
