@@ -33,7 +33,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 export const Home = (): ReactElement => {
-    
+
     const navigate = useNavigate();
    
     const [errorMessage, setErrorMessage] = useState("");
@@ -165,7 +165,6 @@ export const Home = (): ReactElement => {
 
         /* Authenticate client */
         const authClientRes: any = await authClientWithHC(hcText)
-        console.log(authClientRes);
         if (!authClientRes.hasOwnProperty("token")) {
             changeErrorMessage("Não foram encontradas consultas para este código HC!");
             setAlertOpen(true);
@@ -176,7 +175,6 @@ export const Home = (): ReactElement => {
 
         /* Check-in client */
         const checkInAppointmentRes: any = await checkInAppointment(authClientRes.token);
-        console.log(checkInAppointmentRes);
         if (!checkInAppointmentRes.hasOwnProperty("appointment_id")) {
             changeErrorMessage("Não foram encontradas consultas para este código HC!");
             setAlertOpen(true);

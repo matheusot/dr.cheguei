@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { Grid, Avatar, IconButton } from "@mui/material";
+import { Grid, Avatar, AvatarGroup, IconButton } from "@mui/material";
 import { useState, useEffect } from "react";
 import { DrChegueiTitle, RoundedPrimaryButton, RoundedSecondaryButton } from "../../styles";
 import { AppointmentDialog } from "../AppointmentDialog/appointment-dialog";
 import { UpdateProfileDialog } from "../UpdateProfileDialog/update-profile-dialog";
 import { useNavigate } from 'react-router-dom';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const APIURL = "http://localhost:4000";
 //const APIURL = "https://dr-cheguei.herokuapp.com";
@@ -38,7 +39,6 @@ export const AdminHeader = (): React.ReactElement => {
     useEffect(() => {
         const getData = async () => {
             let userData = await getUserData();
-            console.log(userData);
             if ("userInfo" in userData) {
                 setUser({
                     id: userData.userInfo.id,
@@ -54,6 +54,10 @@ export const AdminHeader = (): React.ReactElement => {
         getData();
     }, []);
 
+    const logout = () => {
+        sessionStorage.removeItem("token");
+        navigate("/admin/login");
+    }
 
     return (
         <>
@@ -71,13 +75,25 @@ export const AdminHeader = (): React.ReactElement => {
                         }
                     }
                 >
+                    {/* TODO: cadastro de médicos
                     <RoundedSecondaryButton variant="contained" size="small" sx={{ marginRight: '10px' }}>Cadastrar Médico</RoundedSecondaryButton>
+                    */}
                     <RoundedPrimaryButton variant="contained" size="small" onClick={() => setAppointmentDialog(true)}>Marcar Consulta</RoundedPrimaryButton>
+                    {/* TODO: atualizar perfil 
                     <IconButton aria-label="Perfil" onClick={() => setOpenUpdateProfileDialog(true)}>
                         <Avatar alt="Perfil">
                             { user.name.charAt(0).toUpperCase() }
                         </Avatar>
-                    </IconButton>
+                    </IconButton> */}
+
+                    <AvatarGroup max={4} sx={{marginLeft: '10px'}}>
+                        <Avatar sx={{ cursor: "pointer" }}>
+                                { user.name.charAt(0).toUpperCase() }
+                        </Avatar>
+                        <Avatar sx={{ bgcolor: "#BA2121", cursor: "pointer" }} onClick={() => { logout() }}>
+                            <LogoutIcon/>
+                        </Avatar>
+                    </AvatarGroup>
                 </Grid>
             </Grid>
             <AppointmentDialog open={openAppointmentDialog} setOpenFunction={setAppointmentDialog}/>

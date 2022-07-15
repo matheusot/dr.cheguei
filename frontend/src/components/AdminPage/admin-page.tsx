@@ -103,11 +103,6 @@ export const AdminPage = (): React.ReactElement => {
         return formattedString;
     }
 
-    const logout = () => {
-        sessionStorage.removeItem("token");
-        navigate("/admin/login");
-    }
-
     useEffect(() => {
         const getAppts = async () => {
             let appointments = await getAppointments();
@@ -166,10 +161,6 @@ export const AdminPage = (): React.ReactElement => {
             <DrChegueiText variant="body1" align="left" sx={{ fontSize: '1em', display: 'block', position: 'fixed', left: '50px', bottom: '50px' }}>
                 Última atualização: { formatDateToIsoDate(time) }
             </DrChegueiText>
-
-            <Button variant="text" color="error" onClick={logout} sx={{ fontSize: '1em', display: 'block', position: 'fixed', right: '50px', bottom: '50px' }}>
-                Sair
-            </Button>
         </Box>
     );
 };
