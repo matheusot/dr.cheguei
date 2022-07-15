@@ -33,6 +33,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 export const Home = (): ReactElement => {
+    
     const navigate = useNavigate();
    
     const [errorMessage, setErrorMessage] = useState("");

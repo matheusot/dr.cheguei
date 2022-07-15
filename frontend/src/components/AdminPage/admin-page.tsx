@@ -1,21 +1,15 @@
 import axios from 'axios';
-import { Box, Grid, Stack } from "@mui/material";
+import { Box, Grid, Stack, Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { DrChegueiText } from "../../styles";
 import { AdminHeader } from "../AdminHeader/admin-header";
 import { DrChegueiCalendar } from "../DrChegueiCalendar/dr-cheguei-calendar";
 import { DrChegueiToast } from "../Toast/dr-cheguei-toast";
+import { useNavigate } from 'react-router-dom';
 
 const APIURL = "http://localhost:4000";
 //const APIURL = "https://dr-cheguei.herokuapp.com";
-
-const testeAlertData = {
-    hc: "HC 78945",
-    name: "Doutor Xama Menorrrrrrrrrrrr",
-    date: "",
-    status: "Confirmada!",
-    description: "hoje, 27 de maio às 08h",
-}
+const UPDATE_INTERVAL = 10 * 1000;
 
 const getDateString = (date: Date | unknown): string => {
     let text;
@@ -52,13 +46,16 @@ const gridCss = {
 }
 
 export const AdminPage = (): React.ReactElement => {
+
+    const navigate = useNavigate();
+
     const [date, setSelectedDate] = useState<Date>(new Date());
+    const [time, setTime] = useState(Date.now());
     const [appointmentsArray, setAppointmentsArray] = useState([]);
-    const [openSnackbar, setOpenSnackbar] = useState(true);
 
     const getAppointments = async () => {
-        console.log("getAppointments");
-        const config = { "headers": { "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsInR5cGUiOjIsImRvYyI6IjIyMjMxOCIsIm5hbWUiOiJNYXRoZXVzIFJvZHJpZ3VlcyIsInVzZXJuYW1lIjoibWF0aGV1cyIsImVtYWlsIjoibTIyMjMxOEBkYWMudW5pY2FtcC5iciIsInBob25lIjoiMTkgOTg0MDUtNzQ0NyIsImxhc3RfbG9naW4iOiIyMDIyLTA2LTEwVDEwOjQ4OjQwLjAwMFoiLCJjcmVhdGlvbl9kYXRlIjoiMjAyMi0wNi0wMVQxMDoxMTo0OS4wMDBaIiwiaWF0IjoxNjU3NzU3MTg0fQ.FwXfhZDJnGkNLp6oi6z5g6rhlIMmCx6-DeUP-KuDCG8" } };
+        const token = sessionStorage.getItem("token") || "";
+        const config = { "headers": { "Authorization": token } };
         const formattedDate = [
             date.getFullYear(),
             ('0' + (date.getMonth() + 1)).slice(-2),
@@ -73,6 +70,22 @@ export const AdminPage = (): React.ReactElement => {
             return res.data;             
         });
     }
+
+    const loadAppointments = (appointments: any) => {
+        for (let i = 0; i < appointments.length; i++) {
+            appointments[i].hc = `Dr. ` + appointments[i].doctor_name;
+            appointments[i].name = "HC-" + appointments[i].appointment_HC;
+            appointments[i].date = "";
+            appointments[i].status = appointments[i].appointment_status_name;
+            appointments[i].description = convertIsoDateToDateString(appointments[i].appointment_schedule);
+        }
+        if (appointments.length == 0) {
+            appointments.push({
+                name: "Nenhuma consulta encontrada",
+            })
+        }
+        setAppointmentsArray(appointments);
+    }
     
     const convertIsoDateToDateString = (dateStr: string) => {
         const date = new Date(dateStr); 
@@ -81,27 +94,35 @@ export const AdminPage = (): React.ReactElement => {
         );
     }
 
-    console.log(date);
+    const formatDateToIsoDate = (dateNum: number) => {
+        const date = new Date(dateNum);
+        const tzOffset = date.getTimezoneOffset() * 60000; //offset in milliseconds        
+        const stringDate = new Date((dateNum - tzOffset)).toISOString().replace(/\..+/, "").replace(/T/, "-");
+        const stringDateSplitted = stringDate.split("-");
+        const formattedString = stringDateSplitted[2] + "/" + stringDateSplitted[1] + "/" + stringDateSplitted[0] + " " + stringDateSplitted[3];
+        return formattedString;
+    }
+
+    const logout = () => {
+        sessionStorage.removeItem("token");
+        navigate("/admin/login");
+    }
 
     useEffect(() => {
         const getAppts = async () => {
             let appointments = await getAppointments();
-            for (let i = 0; i < appointments.length; i++) {
-                appointments[i].hc = `Dr. ` + appointments[i].doctor_name;
-                appointments[i].name = "HC-" + appointments[i].appointment_HC;
-                appointments[i].date = "";
-                appointments[i].status = appointments[i].appointment_status_name;
-                appointments[i].description = convertIsoDateToDateString(appointments[i].appointment_schedule);
-            }
-            if (appointments.length == 0) {
-                appointments.push({
-                    name: "Nenhuma consulta encontrada",
-                })
-            }
-            setAppointmentsArray(appointments);
+            loadAppointments(appointments);
         }
         getAppts();
-    }, [date]);
+    }, [date, time]);
+
+    /* Update every X seconds */
+    useEffect(() => {
+        const interval = setInterval(() => setTime(Date.now()), UPDATE_INTERVAL);
+        return () => {
+          clearInterval(interval);
+        };
+    }, []);
     
     return (
         <Box sx={{ padding: "4rem 4rem 0 4rem" }}>
@@ -124,7 +145,7 @@ export const AdminPage = (): React.ReactElement => {
                                     <DrChegueiToast
                                         key={index}
                                         data={listItem}
-                                        isOpen={openSnackbar}
+                                        isOpen={true}
                                         setIsOpen={() => {}}
                                     />
                                 )
@@ -141,6 +162,14 @@ export const AdminPage = (): React.ReactElement => {
                 </Grid>
 
             </Grid>
+
+            <DrChegueiText variant="body1" align="left" sx={{ fontSize: '1em', display: 'block', position: 'fixed', left: '50px', bottom: '50px' }}>
+                Última atualização: { formatDateToIsoDate(time) }
+            </DrChegueiText>
+
+            <Button variant="text" color="error" onClick={logout} sx={{ fontSize: '1em', display: 'block', position: 'fixed', right: '50px', bottom: '50px' }}>
+                Sair
+            </Button>
         </Box>
     );
 };

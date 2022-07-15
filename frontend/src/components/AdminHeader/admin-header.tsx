@@ -1,13 +1,59 @@
+import axios from 'axios';
 import { Grid, Avatar, IconButton } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DrChegueiTitle, RoundedPrimaryButton, RoundedSecondaryButton } from "../../styles";
 import { AppointmentDialog } from "../AppointmentDialog/appointment-dialog";
 import { UpdateProfileDialog } from "../UpdateProfileDialog/update-profile-dialog";
+import { useNavigate } from 'react-router-dom';
 
+const APIURL = "http://localhost:4000";
+//const APIURL = "https://dr-cheguei.herokuapp.com";
+
+const getUserData = async () => {
+    const token = sessionStorage.getItem("token") || "";
+    const config = { "headers": { "Authorization": token } };
+    return await axios.get(`${APIURL}/user`, config)
+    .then((res) => {
+        return res.data;
+    })
+    .catch((err) => {
+        const res = err.response;
+        return res.data;             
+    });
+}
 
 export const AdminHeader = (): React.ReactElement => {
+
+    const navigate = useNavigate();
+
     const [openUpdateProfileDialog, setOpenUpdateProfileDialog] = useState(false);
     const [openAppointmentDialog, setAppointmentDialog] = useState(false);
+    const [user, setUser] = useState({
+        id: "",
+        type: NaN,
+        name: "",
+        username: ""
+    });
+
+    useEffect(() => {
+        const getData = async () => {
+            let userData = await getUserData();
+            console.log(userData);
+            if ("userInfo" in userData) {
+                setUser({
+                    id: userData.userInfo.id,
+                    type: userData.userInfo.type,
+                    name: userData.userInfo.name,
+                    username: userData.userInfo.username
+                });
+            } else {
+                sessionStorage.removeItem("token");
+                navigate("/admin/login");
+            }
+        }
+        getData();
+    }, []);
+
 
     return (
         <>
@@ -15,10 +61,7 @@ export const AdminHeader = (): React.ReactElement => {
                 <Grid item>
                     <DrChegueiTitle variant="h3" mb={0}/>
                 </Grid>
-                <Grid item lg></Grid>
-                <Grid
-                    item
-                    lg
+                <Grid item lg
                     sx={
                         {
                             display: "flex",
@@ -28,10 +71,12 @@ export const AdminHeader = (): React.ReactElement => {
                         }
                     }
                 >
-                    <RoundedSecondaryButton variant="contained" size="small">Cadastrar Médico</RoundedSecondaryButton>
+                    <RoundedSecondaryButton variant="contained" size="small" sx={{ marginRight: '10px' }}>Cadastrar Médico</RoundedSecondaryButton>
                     <RoundedPrimaryButton variant="contained" size="small" onClick={() => setAppointmentDialog(true)}>Marcar Consulta</RoundedPrimaryButton>
                     <IconButton aria-label="Perfil" onClick={() => setOpenUpdateProfileDialog(true)}>
-                        <Avatar alt="Perfil">D</Avatar>
+                        <Avatar alt="Perfil">
+                            { user.name.charAt(0).toUpperCase() }
+                        </Avatar>
                     </IconButton>
                 </Grid>
             </Grid>
