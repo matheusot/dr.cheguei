@@ -72,19 +72,53 @@ export const AdminPage = (): React.ReactElement => {
     }
 
     const loadAppointments = (appointments: any) => {
+        const appointmentsNotConfirmed = [];
+        const appointmentsConfirmed = [];
+        const appointmentsFinished = [];
+        const appointmentsError = [];
+
         for (let i = 0; i < appointments.length; i++) {
-            appointments[i].hc = `Dr. ` + appointments[i].doctor_name;
-            appointments[i].name = "HC-" + appointments[i].appointment_HC;
-            appointments[i].date = "";
-            appointments[i].status = appointments[i].appointment_status_name;
-            appointments[i].description = convertIsoDateToDateString(appointments[i].appointment_schedule);
+            const appointment = {
+                hc: "Dr(a). " + appointments[i].doctor_name,
+                name: "HC-" + appointments[i].appointment_HC,
+                date: "",
+                status: appointments[i].appointment_status_name,
+                description: formatDateToBrFormat(new Date(appointments[i].appointment_schedule).getTime()),
+                appointment_schedule: new Date(appointments[i].appointment_schedule).getTime()
+            };
+            if (appointments[i].appointment_status == 1) {
+                appointmentsNotConfirmed.push(appointment);
+            }
+            else if (appointments[i].appointment_status == 2) {
+                appointmentsConfirmed.push(appointment);
+            }
+            else if (appointments[i].appointment_status == 3) {
+                appointmentsFinished.push(appointment);
+            }
+            else {
+                appointmentsError.push(appointment);
+            }
         }
-        if (appointments.length == 0) {
-            appointments.push({
+
+        appointmentsNotConfirmed.sort((a,b) => a.appointment_schedule - b.appointment_schedule);
+        appointmentsConfirmed.sort((a,b) => a.appointment_schedule - b.appointment_schedule);
+        appointmentsFinished.sort((a,b) => a.appointment_schedule - b.appointment_schedule);
+        appointmentsError.sort((a,b) => a.appointment_schedule - b.appointment_schedule);
+
+        const appointmentsOrdered : any = [...appointmentsConfirmed, ...appointmentsNotConfirmed, ...appointmentsFinished, ...appointmentsError];
+
+        console.log(appointmentsOrdered);
+        if (appointmentsOrdered.length == 0) {
+            appointmentsOrdered.push({
+                hc: "",
                 name: "Nenhuma consulta encontrada",
+                date: "",
+                status: "",
+                description: "",
+                appointment_schedule: 0
             })
         }
-        setAppointmentsArray(appointments);
+        setAppointmentsArray(appointmentsOrdered);
     }
     
     const convertIsoDateToDateString = (dateStr: string) => {
@@ -94,7 +128,7 @@ export const AdminPage = (): React.ReactElement => {
         );
     }
 
-    const formatDateToIsoDate = (dateNum: number) => {
+    const formatDateToBrFormat = (dateNum: number) => {
         const date = new Date(dateNum);
         const tzOffset = date.getTimezoneOffset() * 60000; //offset in milliseconds        
         const stringDate = new Date((dateNum - tzOffset)).toISOString().replace(/\..+/, "").replace(/T/, "-");
@@ -158,8 +192,8 @@ export const AdminPage = (): React.ReactElement => {
 
             </Grid>
 
-            <DrChegueiText variant="body1" align="left" sx={{ fontSize: '1em', display: 'block', position: 'fixed', left: '50px', bottom: '50px' }}>
-                Última atualização: { formatDateToIsoDate(time) }
+            <DrChegueiText variant="body1" align="left" sx={{ fontSize: '1em', display: 'block', position: 'fixed', right: '50px', bottom: '50px' }}>
+                Última atualização: { formatDateToBrFormat(time) }
             </DrChegueiText>
         </Box>
     );

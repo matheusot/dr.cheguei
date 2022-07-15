@@ -44,9 +44,11 @@ const alertTheme = createTheme({
 const getStatusColor = (status: string): string => {
     if (status === "Confirmada!" || status === "Presente")
         return "#21BA71";
-    else if (status === "Não confirmado")
+    if (status === "Não confirmado")
         return "#D6A52A";
-    return "#2AB7D6";
+    if (status === "Finalizado")
+        return "#2AB7D6";
+    return "#BA2121";
 }
 
 
