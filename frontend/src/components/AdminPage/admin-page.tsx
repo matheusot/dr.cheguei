@@ -164,15 +164,23 @@ export const AdminPage = (): React.ReactElement => {
         setAnchorEl(null);
     };
 
-    const updateAppointment = () => {
-        
-        console.log("updateAppointment", lastAppointmentIdClicked);
+    const updateAppointment = async (statusId: number) => {
+
+        const token = sessionStorage.getItem("token") || "";
+
+        const config = { "headers": { "Authorization": token } };
+        await axios.put(`${settings.API_URL}/appointment/${lastAppointmentIdClicked}/status/${statusId}`, {}, config)
+        .then((res) => {
+            setTime(Date.now());
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
         handleClose()
     }
      
     const deleteAppointment = async () => {
-        console.log("deleteAppointment", lastAppointmentIdClicked);
-
         const token = sessionStorage.getItem("token") || "";
         const config = { "headers": { "Authorization": token } };
         await axios.delete(`${settings.API_URL}/appointment/${lastAppointmentIdClicked}`, config)
@@ -205,7 +213,7 @@ export const AdminPage = (): React.ReactElement => {
                             appointmentsArray.map((listItem, index) => {
                                 return (
                                     <DrChegueiToast
-                                        key={listItem.id}
+                                        key={index}
                                         data={listItem}
                                         isOpen={true}
                                         action={
@@ -213,7 +221,6 @@ export const AdminPage = (): React.ReactElement => {
                                             <>
                                                 <IconButton
                                                     data-appointment={listItem.id}
-                                                    key={listItem.id}
                                                     size="small"
                                                     aria-label="more"
                                                     id="long-button"
@@ -244,9 +251,18 @@ export const AdminPage = (): React.ReactElement => {
                     open={open}
                     onClose={handleClose}
                 >
-                    {/* <MenuItem key="update" onClick={updateAppointment}>
-                        Atualizar Consulta
-                    </MenuItem> */}
+                    <MenuItem key="confirmar" onClick={() => updateAppointment(2)}>
+                        Confirmar Presença
+                    </MenuItem>
+                    <MenuItem key="finalizar" onClick={() => updateAppointment(3)}>
+                        Finalizar Consulta
+                    </MenuItem>
+                    <MenuItem key="cancelar" onClick={() => updateAppointment(5)}>
+                        Cancelar Consulta
+                    </MenuItem>
+                    <MenuItem key="faltou" onClick={() => updateAppointment(6)}>
+                        Paciente Faltou
+                    </MenuItem>
                     <MenuItem key="delete" onClick={deleteAppointment}>
                         Apagar Consulta
                     </MenuItem>

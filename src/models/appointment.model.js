@@ -139,7 +139,7 @@ async function getAppointmentsByDoctor(doc, appointment_date){
   if (doc) {
     query += `AND appointments.doctor_id = ? `;
   }
-  
+
   if (appointment_date) {
     query += `AND CAST(appointments.schedule AS DATE) = CAST(? AS DATE) `;
   }
@@ -195,6 +195,19 @@ async function deleteAppointment(appointmentId) {
     return e["sqlMessage"];
   }
 }
+
+
+async function updateAppointmentStatusId(appointmentId, appointmentStatusId) {
+  const db = await require('../configs/db.config').getConnection();
+  const query = "UPDATE appointments SET status = ? WHERE id = ?";
+  try {
+    await db.execute(query, [appointmentStatusId, appointmentId]);
+    return false;
+  } catch (e) {
+    return e["sqlMessage"];
+  }
+}
+
 
 /* TODO: not needed for now */
 // async function News(doc_id=false){
@@ -254,7 +267,8 @@ module.exports = {
   newAppointment,
   checkInAppointment,
   getAppointmentsByDoctor,
-  deleteAppointment
+  deleteAppointment,
+  updateAppointmentStatusId
   /* TODO: edit or remove later
   News
   */
