@@ -60,7 +60,7 @@ export const AdminPage = (): React.ReactElement => {
             ('0' + (date.getMonth() + 1)).slice(-2),
             ('0' + date.getDate()).slice(-2)
         ].join('-');
-        return await axios.get(`${settings.API_URL}/appointment?date=${formattedDate}&all`, config)
+        return await axios.get(`${settings.API_URL}/appointment?date=${formattedDate}`, config)
         .then((res) => {
             return res.data;
         })
