@@ -6,25 +6,16 @@ import { PrimaryButton } from "../../styles";
 import { DrChegueiHeader } from "../DrChegueiHeader/dr-cheguei-header";
 import { LoginGrid } from "../LoginGrid/login-grid";
 import { useNavigate } from 'react-router-dom';
+import { settings } from '../settings';
 
 interface FormFields {
     username: string;
     password: string;
 }
 
-const APIURL = "http://localhost:4000";
-const AlertData = {
-    hc: "",
-    name: "",
-    date: "",
-    status: "",
-    description: ""
-};
-
-
 const authAdminUser = async (username: string, password: string) => {
     const authObj = { username, password };
-    return await axios.post(`${APIURL}/session`, authObj)
+    return await axios.post(`${settings.API_URL}/session`, authObj)
     .then((res) => {
         return res.data;
     })

@@ -1,15 +1,13 @@
 import axios from 'axios';
-import { Box, Grid, Stack, Button } from "@mui/material";
+import { Box, Grid, Stack, IconButton } from "@mui/material";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState, useEffect } from "react";
 import { DrChegueiText } from "../../styles";
 import { AdminHeader } from "../AdminHeader/admin-header";
 import { DrChegueiCalendar } from "../DrChegueiCalendar/dr-cheguei-calendar";
 import { DrChegueiToast } from "../Toast/dr-cheguei-toast";
 import { useNavigate } from 'react-router-dom';
-
-const APIURL = "http://localhost:4000";
-//const APIURL = "https://dr-cheguei.herokuapp.com";
-const UPDATE_INTERVAL = 10 * 1000;
+import { settings } from '../settings';
 
 const getDateString = (date: Date | unknown): string => {
     let text;
@@ -61,13 +59,13 @@ export const AdminPage = (): React.ReactElement => {
             ('0' + (date.getMonth() + 1)).slice(-2),
             ('0' + date.getDate()).slice(-2)
         ].join('-');
-        return await axios.get(`${APIURL}/appointment?date=${formattedDate}&all`, config)
+        return await axios.get(`${settings.API_URL}/appointment?date=${formattedDate}&all`, config)
         .then((res) => {
             return res.data;
         })
         .catch((err) => {
             const res = err.response;
-            return res.data;             
+            return res.data;
         });
     }
 
@@ -107,7 +105,6 @@ export const AdminPage = (): React.ReactElement => {
 
         const appointmentsOrdered : any = [...appointmentsConfirmed, ...appointmentsNotConfirmed, ...appointmentsFinished, ...appointmentsError];
 
-        console.log(appointmentsOrdered);
         if (appointmentsOrdered.length == 0) {
             appointmentsOrdered.push({
                 hc: "",
@@ -119,13 +116,6 @@ export const AdminPage = (): React.ReactElement => {
             })
         }
         setAppointmentsArray(appointmentsOrdered);
-    }
-    
-    const convertIsoDateToDateString = (dateStr: string) => {
-        const date = new Date(dateStr); 
-        return date.toLocaleString("pt-br", 
-            { weekday: "long", year: 'numeric', month: "long", day: 'numeric' }
-        );
     }
 
     const formatDateToBrFormat = (dateNum: number) => {
@@ -145,9 +135,9 @@ export const AdminPage = (): React.ReactElement => {
         getAppts();
     }, [date, time]);
 
-    /* Update every X seconds */
+    /* Update every REACT_APP_ADMIN_REFRESH_INTERVAL milis */
     useEffect(() => {
-        const interval = setInterval(() => setTime(Date.now()), UPDATE_INTERVAL);
+        const interval = setInterval(() => setTime(Date.now()), settings.ADMIN_REFRESH_INTERVAL);
         return () => {
           clearInterval(interval);
         };
@@ -175,6 +165,11 @@ export const AdminPage = (): React.ReactElement => {
                                         key={index}
                                         data={listItem}
                                         isOpen={true}
+                                        action={
+                                            <IconButton component="label" size="small">
+                                                <MoreVertIcon />
+                                            </IconButton>
+                                          }
                                         setIsOpen={() => {}}
                                     />
                                 )

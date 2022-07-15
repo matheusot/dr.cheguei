@@ -15,7 +15,8 @@ interface ToastProps {
     },
     isOpen: boolean,
     setIsOpen: Function,
-    autoHideDuration?: number
+    autoHideDuration?: number,
+    action?: any
 }
 
 const alertTheme = createTheme({
@@ -101,26 +102,30 @@ export const DrChegueiToast = ({
     data,
     isOpen,
     setIsOpen,
-    autoHideDuration
+    autoHideDuration,
+    action
 }: ToastProps): ReactElement => {
+    const alertStyle = {
+        width: "100%",
+        backgroundColor: "#E9E9E9",
+        borderRadius: "7px",
+        minHeight: "120px",
+        display: "grid",
+        gridTemplateColumns: action == false ? "1fr 0px" : "1fr 30px",
+        message: {
+            width: "100%",
+        }
+    }
+    
     return (
         <ThemeProvider theme={alertTheme}>
 
             <Snackbar open={isOpen} autoHideDuration={autoHideDuration} onClose={() => setIsOpen(false)}>
                 <Alert
-                    sx={{
-                        width: "100%",
-                        backgroundColor: "#E9E9E9",
-                        borderRadius: "7px",
-                        minHeight: "120px",
-                        display: "grid",
-                        gridTemplateColumns: "1fr 30px",
-                        message: {
-                            width: "100%",
-                        }
-                    }}
+                    sx={alertStyle}
                     onClose={() => setIsOpen(false)}
                     icon={false}
+                    action={action}
                 >
                     <Grid
                         sx={{ margin: "0", display: "flex", justifyContent: "space-around", gridTemplateColumns: "1fr 10px 1fr", gridGap: "10px" }}

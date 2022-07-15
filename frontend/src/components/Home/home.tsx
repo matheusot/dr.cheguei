@@ -8,15 +8,8 @@ import { SegmentedTextField } from '../SegmentedTextField/segmented-text-field';
 import { LoginGrid } from '../LoginGrid/login-grid';
 import { forwardRef, ReactElement, SyntheticEvent, useState } from 'react';
 import { DrChegueiToast } from '../Toast/dr-cheguei-toast';
+import { settings } from '../settings';
 
-
-const APIURL = "http://localhost:4000";
-//const APIURL = "https://dr-cheguei.herokuapp.com";
-const ENABLE_GEO = false;
-const defaultDelay = 500000;
-const HCLength = 5;
-const HClat = -22.8268021;
-const HClon = -47.0701726;
 const AlertData = {
     hc: "",
     name: "",
@@ -43,10 +36,7 @@ export const Home = (): ReactElement => {
 
     const [alertOpen, setAlertOpen] = useState(false);
     const [toastOpen, setToastOpen] = useState(false);
-    const handleAlertClose = (event?: SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
+    const handleAlertClose = () => {
         setAlertOpen(false);
     };
 
@@ -71,7 +61,7 @@ export const Home = (): ReactElement => {
     }
 
     const checkHCLength = (hcText: string) => {
-        if (hcText.length < HCLength) {
+        if (hcText.length < settings.HC_LENGTH) {
             return false;
         }
         return true;
@@ -79,14 +69,14 @@ export const Home = (): ReactElement => {
 
     const convertIsoDateToDateString = (dateStr: string) => {
         const date = new Date(dateStr); 
-        return date.toLocaleString("pt-br", 
-            { weekday: "long", year: 'numeric', month: "long", day: 'numeric' }
-        );
+        const dateString = date.toLocaleString("pt-br", { month: "long", day: 'numeric'});
+        const timeString = date.toLocaleString("pt-br", { hour: 'numeric', minute: 'numeric' });
+        return `${dateString} às ${timeString}`;
     }
 
     const checkInAppointment = async (token: string) => {
         const config = { "headers": { "Authorization": token } };
-        return await axios.get(`${APIURL}/appointment?checkin=true`, config)
+        return await axios.get(`${settings.API_URL}/appointment?checkin=true`, config)
         .then((res) => {
             return res.data; 
         })
@@ -97,7 +87,7 @@ export const Home = (): ReactElement => {
     }
 
     const authClientWithHC = async (hcText: string) => {
-        return await axios.post(`${APIURL}/session`, { "hc": hcText })
+        return await axios.post(`${settings.API_URL}/session`, { "hc": hcText })
         .then((res) => {
             return res.data;
         })
@@ -146,13 +136,13 @@ export const Home = (): ReactElement => {
         }
 
         /* Get lat, lon and verify distance from HC */
-        if (ENABLE_GEO) {
+        if (settings.ENABLE_GEO) {
             const location = await getClientLatLon();
             let distance = 1;
             if (location != null) {
                 const clientLat = location.coords.latitude;
                 const clientLon = location.coords.longitude;
-                distance = getDistanceFromLatLonInKm(HClat, HClon, clientLat, clientLon);
+                distance = getDistanceFromLatLonInKm(settings.GEO_LATITUDE, settings.GEO_LONGITUDE, clientLat, clientLon);
             }
             if ((location == null) || (distance > 0.1)) { // distance > 0.1km
                 changeErrorMessage("Você precisa estar localizado no HC para realizar o check-in!");
@@ -192,8 +182,6 @@ export const Home = (): ReactElement => {
         setToastOpen(true);
     }
 
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-
     return (
         <LoginGrid imageUrl="/home.svg">
             <>
@@ -205,7 +193,7 @@ export const Home = (): ReactElement => {
                         Insira seu código HC
                     </DrChegueiText>
                     <SegmentedTextField
-                        segments={HCLength + 2} 
+                        segments={settings.HC_LENGTH + 2} 
                         separator="-"
                         separatorAt={2}
                         defaultValuesString="HC"
@@ -228,14 +216,14 @@ export const Home = (): ReactElement => {
                     <DrChegueiToast 
                         data={AlertData}
                         isOpen={toastOpen}
-                        setIsOpen={setOpenSnackbar}
-                        autoHideDuration={defaultDelay}
+                        setIsOpen={setToastOpen}
+                        autoHideDuration={settings.TOAST_CLOSE_DELAY}
                     />
-                    <Snackbar open={alertOpen} autoHideDuration={defaultDelay} onClose={handleAlertClose} sx={{
+                    <Snackbar open={alertOpen} autoHideDuration={settings.TOAST_CLOSE_DELAY} onClose={() => setAlertOpen(false)} sx={{
                         position: 'static',
                         height: '100%',
                     }}>
-                        <Alert onClose={handleAlertClose} severity="error" sx={{
+                        <Alert onClose={() => setAlertOpen(false)} severity="error" sx={{
                             width: '100%',
                             height: '100%',
                             alignItems: 'center',

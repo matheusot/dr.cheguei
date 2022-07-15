@@ -6,14 +6,12 @@ import { AppointmentDialog } from "../AppointmentDialog/appointment-dialog";
 import { UpdateProfileDialog } from "../UpdateProfileDialog/update-profile-dialog";
 import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
-
-const APIURL = "http://localhost:4000";
-//const APIURL = "https://dr-cheguei.herokuapp.com";
+import { settings } from '../settings';
 
 const getUserData = async () => {
     const token = sessionStorage.getItem("token") || "";
     const config = { "headers": { "Authorization": token } };
-    return await axios.get(`${APIURL}/user`, config)
+    return await axios.get(`${settings.API_URL}/user`, config)
     .then((res) => {
         return res.data;
     })
