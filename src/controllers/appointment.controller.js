@@ -44,6 +44,22 @@ async function getAppointments(req, res) {
 }
 
 
+
+/* 
+ * Delete a appointment (set status = -1)
+ * params: urlparam: appointmentId
+ * return: status {404: error, 200: appointment removed}
+*/
+async function deleteAppointment(req, res) {
+  const error = await appointmentModel.deleteAppointment(req.params.appointmentId);
+  if (error == false) {
+    return res.status(200).json({"msg": "Appointment Deleted"});
+  } else {
+    return res.status(401).json({"msg": error});
+  }
+}
+
+
 /* 
  * Gets all appointments update to state 2 in the last 5 minutes
  * return: appointments found in DB
@@ -64,6 +80,7 @@ async function getNewAppointments(req, res) {
 module.exports = {
   addAppointment,
   getAppointments,
+  deleteAppointment,
   /* TODO: not needed for now
   getNewAppointments
   */

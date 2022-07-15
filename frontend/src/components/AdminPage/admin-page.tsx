@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Box, Grid, Stack, IconButton } from "@mui/material";
+import { Box, Grid, Stack, IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState, useEffect } from "react";
 import { DrChegueiText } from "../../styles";
@@ -8,6 +8,7 @@ import { DrChegueiCalendar } from "../DrChegueiCalendar/dr-cheguei-calendar";
 import { DrChegueiToast } from "../Toast/dr-cheguei-toast";
 import { useNavigate } from 'react-router-dom';
 import { settings } from '../settings';
+import React from 'react'
 
 const getDateString = (date: Date | unknown): string => {
     let text;
@@ -49,7 +50,7 @@ export const AdminPage = (): React.ReactElement => {
 
     const [date, setSelectedDate] = useState<Date>(new Date());
     const [time, setTime] = useState(Date.now());
-    const [appointmentsArray, setAppointmentsArray] = useState([]);
+    const [appointmentsArray, setAppointmentsArray] = useState<any[]>([]);
 
     const getAppointments = async () => {
         const token = sessionStorage.getItem("token") || "";
@@ -77,6 +78,7 @@ export const AdminPage = (): React.ReactElement => {
 
         for (let i = 0; i < appointments.length; i++) {
             const appointment = {
+                id: appointments[i].appointment_id,
                 hc: "Dr(a). " + appointments[i].doctor_name,
                 name: "HC-" + appointments[i].appointment_HC,
                 date: "",
@@ -107,6 +109,7 @@ export const AdminPage = (): React.ReactElement => {
 
         if (appointmentsOrdered.length == 0) {
             appointmentsOrdered.push({
+                id: 0,
                 hc: "",
                 name: "Nenhuma consulta encontrada",
                 date: "",
@@ -115,6 +118,7 @@ export const AdminPage = (): React.ReactElement => {
                 appointment_schedule: 0
             })
         }
+
         setAppointmentsArray(appointmentsOrdered);
     }
 
@@ -142,7 +146,46 @@ export const AdminPage = (): React.ReactElement => {
           clearInterval(interval);
         };
     }, []);
-    
+
+
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [lastAppointmentIdClicked, setLastAppointmentIdClicked] = useState<string>("");
+
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        const htmlElement = event.currentTarget as HTMLElement;
+        const appointmentId = htmlElement.dataset.appointment || "";
+        setLastAppointmentIdClicked(appointmentId);
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setLastAppointmentIdClicked("");
+        setAnchorEl(null);
+    };
+
+    const updateAppointment = () => {
+        
+        console.log("updateAppointment", lastAppointmentIdClicked);
+        handleClose()
+    }
+     
+    const deleteAppointment = async () => {
+        console.log("deleteAppointment", lastAppointmentIdClicked);
+
+        const token = sessionStorage.getItem("token") || "";
+        const config = { "headers": { "Authorization": token } };
+        await axios.delete(`${settings.API_URL}/appointment/${lastAppointmentIdClicked}`, config)
+        .then((res) => {
+            setTime(Date.now());
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
+        handleClose()
+    }
+
     return (
         <Box sx={{ padding: "4rem 4rem 0 4rem" }}>
 
@@ -162,14 +205,28 @@ export const AdminPage = (): React.ReactElement => {
                             appointmentsArray.map((listItem, index) => {
                                 return (
                                     <DrChegueiToast
-                                        key={index}
+                                        key={listItem.id}
                                         data={listItem}
                                         isOpen={true}
                                         action={
-                                            <IconButton component="label" size="small">
-                                                <MoreVertIcon />
-                                            </IconButton>
-                                          }
+                                            listItem.id != 0 ?
+                                            <>
+                                                <IconButton
+                                                    data-appointment={listItem.id}
+                                                    key={listItem.id}
+                                                    size="small"
+                                                    aria-label="more"
+                                                    id="long-button"
+                                                    aria-controls={open ? 'long-menu' : undefined}
+                                                    aria-expanded={open ? 'true' : undefined}
+                                                    aria-haspopup="true"
+                                                    onClick={handleClick}>
+                                                    <MoreVertIcon />
+                                                </IconButton>
+                                            </>
+                                            :
+                                            false
+                                        }
                                         setIsOpen={() => {}}
                                     />
                                 )
@@ -177,6 +234,23 @@ export const AdminPage = (): React.ReactElement => {
                         }  
                     </Stack>
                 </Grid>
+
+                <Menu
+                    id="long-menu"
+                    MenuListProps={{
+                        'aria-labelledby': 'long-button',
+                    }}
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                >
+                    {/* <MenuItem key="update" onClick={updateAppointment}>
+                        Atualizar Consulta
+                    </MenuItem> */}
+                    <MenuItem key="delete" onClick={deleteAppointment}>
+                        Apagar Consulta
+                    </MenuItem>
+                </Menu>
 
                 <Grid item md={6} lg={6} sx ={{ paddingTop: "0 !important" }}>
                     <DrChegueiCalendar

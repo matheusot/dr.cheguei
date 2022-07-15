@@ -130,22 +130,18 @@ async function getAppointmentsByDoctor(doc, appointment_date){
     INNER JOIN users ON appointments.doctor_id = users.id
     INNER JOIN user_types ON users.type = user_types.id
     INNER JOIN sectors ON appointments.sector_id = sectors.id
+  
+  WHERE 
+
+   appointments.status != -1
   `;
 
-  if (doc || appointment_date) {
-    query += ` WHERE `;
-  }
-
   if (doc) {
-    query += `appointments.doctor_id = ? `;
+    query += `AND appointments.doctor_id = ? `;
   }
-
-  if (doc && appointment_date) {
-    query += ` AND `;
-  }
-
+  
   if (appointment_date) {
-    query += `CAST(appointments.schedule AS DATE) = CAST(? AS DATE) `;
+    query += `AND CAST(appointments.schedule AS DATE) = CAST(? AS DATE) `;
   }
 
   query += `ORDER BY
@@ -178,11 +174,22 @@ async function checkInAppointment(appointmentId) {
 }
 
 
-async function newAppointment(sector_id, doctor_id, hc, status, schedule, last_update, creation_date){
+async function newAppointment(sector_id, doctor_id, hc, status, schedule){
   const db = await require('../configs/db.config').getConnection();
   const query = "INSERT INTO appointments (sector_id, doctor_id, hc, status, schedule) VALUES (?, ?, ?, ?, ?)";
   try {
     await db.execute(query, [sector_id, doctor_id, hc, status, schedule]);
+    return false;
+  } catch (e) {
+    return e["sqlMessage"];
+  }
+}
+
+async function deleteAppointment(appointmentId) {
+  const db = await require('../configs/db.config').getConnection();
+  const query = "UPDATE appointments SET status = -1 WHERE id = ?";
+  try {
+    await db.execute(query, [appointmentId]);
     return false;
   } catch (e) {
     return e["sqlMessage"];
@@ -247,6 +254,7 @@ module.exports = {
   newAppointment,
   checkInAppointment,
   getAppointmentsByDoctor,
+  deleteAppointment
   /* TODO: edit or remove later
   News
   */
