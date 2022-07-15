@@ -125,7 +125,7 @@ export const AdminPage = (): React.ReactElement => {
     const formatDateToBrFormat = (dateNum: number) => {
         const date = new Date(dateNum);
         const tzOffset = date.getTimezoneOffset() * 60000; //offset in milliseconds        
-        const stringDate = new Date((dateNum - tzOffset)).toISOString().replace(/\..+/, "").replace(/T/, "-");
+        const stringDate = new Date((dateNum - 0)).toISOString().replace(/\..+/, "").replace(/T/, "-");
         const stringDateSplitted = stringDate.split("-");
         const formattedString = stringDateSplitted[2] + "/" + stringDateSplitted[1] + "/" + stringDateSplitted[0] + " " + stringDateSplitted[3];
         return formattedString;
